@@ -8,19 +8,6 @@
  *
  * @author FallenAngel
  */
-public class Invoice {
-
-    // Class variavels
+public class D_Sender extends Device{
     
-    // Class Getters & Setters
-    
-    // Interface variavels
-    
-    // Construtors
-    
-    // Clone Construtor
-    
-    // Interface Getters & Setters
-    
-    // Methods
 }

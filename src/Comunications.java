@@ -8,6 +8,6 @@
  *
  * @author FallenAngel
  */
-public class Comunications {
+public interface Comunications {
     
 }
