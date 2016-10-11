@@ -92,9 +92,4 @@ public class Client {
         return new Client(this);
     }
 
-    public Client(long id) {
-        this.id = id;
-    }
-    
-    
-}
+  }
