@@ -10,4 +10,7 @@
  */
 public interface Comunications {
     
+    
+    // interface construtors
+    
 }

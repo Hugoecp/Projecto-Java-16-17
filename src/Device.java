@@ -1,5 +1,4 @@
 
-import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,7 +20,6 @@ public abstract class Device {
     
     private long number;
     private String networkType;
-    private ArrayList<String> Logs;
     
     // Construtors
     
@@ -29,14 +27,12 @@ public abstract class Device {
         
         this.number = n;
         this.networkType = nt;
-        this.Logs = new ArrayList<String>();
     }
     
     public Device(){
         
         this.number = 0;
         this.networkType = "";
-        this.Logs = new ArrayList<String>();
     }
     
     // Clone Construtor
@@ -45,12 +41,31 @@ public abstract class Device {
         
         d.number = this.number;
         d.networkType = this.networkType;
-        d.Logs = this.Logs;
     }
     
     // Interface Getters & Setters
     
-    
+    public long getNumber() {
+        return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
+
+    public String getNetworkType() {
+        return networkType;
+    }
+
+    public void setNetworkType(String networkType) {
+        this.networkType = networkType;
+    }
+
         
-    // Methods
+    // Methods    
+
+    public abstract String toString();
+    public abstract Device clone();
+    public abstract boolean equals(Device d);
+    //public abstract ArrayList<Comunications> ReceivedCalls();
 }
