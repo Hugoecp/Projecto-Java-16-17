@@ -41,9 +41,9 @@ public class Client {
     
     public Client(Client c){
         
-        c.id = this.id;
-        c.name = this.name;
-        c.accs = this.accs;
+        this.id = c.getId();
+        this.name = c.getName();
+        this.accs = c.getAccs();
         
     }
     
@@ -66,11 +66,12 @@ public class Client {
     }
 
     public ArrayList<Account> getAccs() {
-        return accs;
-    }
-
-    public void setAccs(ArrayList<Account> accs) {
-        this.accs = accs;
+        
+        ArrayList<Account> temp = new ArrayList<Account>();
+        for(Account c : this.accs){
+            temp.add(c); //TODO passar para c.clone() assim que tive o clone na Account
+        }
+        return temp;
     }
     
     // Methods
@@ -87,9 +88,6 @@ public class Client {
         return "Client{" + "id=" + id + ", name=" + name + ", accs=" + accs + '}';
     }
     
-    public Client clone(){
-        
-        return new Client(this);
-    }
+    public Client clone(){return new Client(this);}
 
   }

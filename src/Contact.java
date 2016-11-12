@@ -17,37 +17,25 @@ public class Contact {
     
     public Contact(Contact c){
         
-        c.name = this.name;
-        c.number = this.number;
+        this.name = c.getName();
+        this.number = c.getNumber();
     }
     
     // Getters & Setters
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getNumber() {
-        return number;
-    }
-
-    public void setNumber(long number) {
-        this.number = number;
-    }
+    public String getName(){return name;}
+    public void setName(String name){this.name = name;}
+    public long getNumber(){return number;}
+    public void setNumber(long number){this.number = number;}
     
     // Methdos
-
     public String toString() {
         return "Contact{" + "name=" + name + ", number=" + number + '}';
     }
-    
+   
     public boolean equals(Contact c){
         
-        if(c.equals(this.name) && c.number == this.number)
+        if(c.equals(this.getName()) && c.number == this.getNumber())
             return true;
         
         return false;

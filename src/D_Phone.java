@@ -3,9 +3,6 @@ import java.util.ArrayList;
 
 public class D_Phone extends Device{
  
-    private String SMS;
-    private String MMS;
-    private String Calls;
     private ArrayList<Contact> cList;
     private ArrayList<Comunications> logs;
 
