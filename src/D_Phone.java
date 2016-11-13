@@ -16,7 +16,8 @@ public class D_Phone extends Device{
     public D_Phone(D_Phone p){
         
         super(p.getNumber(), p.getNetworkType());
-        
+        this.cList = p.getCList();
+        this.logs = p.getLogs();
     }
     
     public ArrayList<Contact> getCList(){

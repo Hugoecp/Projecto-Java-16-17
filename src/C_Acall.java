@@ -1,5 +1,10 @@
 public class C_Acall extends Comunications{
  
+    private static double COST = 0.12;
+    
+    public double getCOST(){return C_Acall.COST;}
+    public void setCOST(double d){C_Acall.COST = d;}
+    
     private double duration;
     
     public C_Acall(long on, long dn, double d){
