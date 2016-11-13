@@ -1,15 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author FallenAngel
- */
 public class C_VMMS extends Comunications{
     
+    private static double COST = 0.456;
+    
+    public double getCOST()
+    {
+        return C_VMMS.COST;
+    }
+    
+    public void setCOST(double c)
+    {
+        C_VMMS.COST = c;
+    }
+            
+            
     private String res;
     private String format;
     private double duration;

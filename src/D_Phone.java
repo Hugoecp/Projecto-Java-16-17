@@ -40,8 +40,8 @@ public class D_Phone extends Device{
     }
     public boolean equals(Device d){
         
-        if(this.getClass().getName() == ((D_Phone)d).getClass().getName()){
-            if(super.getNumber() == ((D_Phone)d).getNumber()){
+        if(this.getClass().getName() == d.getClass().getName()){
+            if(super.getNumber() == d.getNumber()){
                 return true;
             }
         }

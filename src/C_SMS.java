@@ -1,5 +1,17 @@
 public class C_SMS extends Comunications{
     
+    private static double COST = 0.12;
+    
+    public double getCOST()
+    {
+        return C_SMS.COST;
+    }
+    
+    public void setCOST(double c)
+    {
+        C_SMS.COST=c;
+    }
+    
     private double smsSize = 0.0;
     private String smsBody = "";
     

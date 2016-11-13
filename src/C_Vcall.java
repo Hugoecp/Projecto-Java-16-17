@@ -1,5 +1,18 @@
 public class C_Vcall extends Comunications{
- 
+    
+    private static double COST = 0.92;
+    
+    public double getCOST()
+    {
+        return C_Vcall.COST;
+    }
+    
+    public void setCOST(double c)
+    {
+        C_Vcall.COST = c;
+    }
+    
+    
     private double duration;
     private String res;
     
