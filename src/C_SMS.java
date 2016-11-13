@@ -42,8 +42,8 @@ public class C_SMS extends Comunications{
     public boolean equals(Comunications c){
         
         if(this.getClass().getName() == c.getClass().getName()){
-            if(super.getOriginNumber() == ((C_SMS)c).getOriginNumber()){
-                if(super.getDestinyNumber() == ((C_SMS)c).getDestinyNumber()){
+            if(super.getOriginNumber() == c.getOriginNumber()){
+                if(super.getDestinyNumber() == c.getDestinyNumber()){
                     if(this.smsSize == ((C_SMS)c).smsSize){
                         if(((C_SMS)c).getSmsBody().equals(this.smsBody)){
                             return true;

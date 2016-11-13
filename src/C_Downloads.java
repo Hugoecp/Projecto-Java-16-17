@@ -1,21 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author FallenAngel
- */
 public class C_Downloads extends Comunications{
+
+    private static double COST = 0.12;
     
     private double size;
     private double duration;
     
-    public C_Downloads(long on, long dn, long s, long d){
+    public C_Downloads(long on, long s, long d){
         
-        super(on,dn);
+        super(on,119);
         this.size = s;
         this.duration = d;
     }

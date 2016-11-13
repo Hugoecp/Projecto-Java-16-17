@@ -16,7 +16,8 @@ public class D_Phone extends Device{
     public D_Phone(D_Phone p){
         
         super(p.getNumber(), p.getNetworkType());
-        
+        this.cList = p.getCList();
+        this.logs = p.getLogs();
     }
     
     public ArrayList<Contact> getCList(){
@@ -40,8 +41,8 @@ public class D_Phone extends Device{
     }
     public boolean equals(Device d){
         
-        if(this.getClass().getName() == ((D_Phone)d).getClass().getName()){
-            if(super.getNumber() == ((D_Phone)d).getNumber()){
+        if(this.getClass().getName() == d.getClass().getName()){
+            if(super.getNumber() == d.getNumber()){
                 return true;
             }
         }
