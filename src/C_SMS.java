@@ -1,15 +1,3 @@
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author FallenAngel
- */
 public class C_SMS extends Comunications{
     
     private double smsSize = 0.0;
@@ -56,11 +44,10 @@ public class C_SMS extends Comunications{
         if(this.getClass().getName() == c.getClass().getName()){
             if(super.getOriginNumber() == ((C_SMS)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_SMS)c).getDestinyNumber()){
-                    if(this.smsSize != ((C_SMS)c).smsSize){
-                        return false;
-                    }
-                    if(((C_SMS)c).getSmsBody().equals(this.smsBody)){
-                        return true;
+                    if(this.smsSize == ((C_SMS)c).smsSize){
+                        if(((C_SMS)c).getSmsBody().equals(this.smsBody)){
+                            return true;
+                        }
                     }
                 }    
             }
