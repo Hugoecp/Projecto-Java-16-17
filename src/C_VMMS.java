@@ -3,16 +3,8 @@ public class C_VMMS extends Comunications{
     
     private static double COST = 0.456;
     
-    public double getCOST()
-    {
-        return C_VMMS.COST;
-    }
-    
-    public void setCOST(double c)
-    {
-        C_VMMS.COST = c;
-    }
-            
+    public double getCOST(){return C_VMMS.COST;}
+    public void setCOST(double c){C_VMMS.COST = c;}
             
     private String res;
     private String format;
@@ -34,24 +26,12 @@ public class C_VMMS extends Comunications{
         this.duration = c.getDuration();
     }
 
-    public String getRes() {
-        return res;
-    }
-    public void setRes(String res) {
-        this.res = res;
-    }
-    public String getFormat() {
-        return format;
-    }
-    public void setFormat(String format) {
-        this.format = format;
-    }
-    public double getDuration() {
-        return duration;
-    }
-    public void setDuration(double duration) {
-        this.duration = duration;
-    }
+    public String getRes(){return res;}
+    public void setRes(String res){this.res = res;}
+    public String getFormat(){return format;}
+    public void setFormat(String format){this.format = format;}
+    public double getDuration(){return duration;}
+    public void setDuration(double duration) {this.duration = duration;}
     
     public C_VMMS clone(){return new C_VMMS(this);}
     public boolean equals(Comunications c){
