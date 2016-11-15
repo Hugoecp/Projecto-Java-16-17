@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Account {
     
@@ -13,24 +12,50 @@ public class Account {
     public static long getACCOUNT_ID() {
         return ACCOUNT_ID;
     }
-
-    public static void setACCOUNT_ID(long ACCOUNT_ID) {
-        Account.ACCOUNT_ID = ACCOUNT_ID;
-    }
     
     // Interface variavels
     
     private long id;
     private ArrayList<Device> DeviceList;
-    private HashMap<Client, Invoice> accInvoice;
+    //private HashMap<Device, Invoice> accInvoice;
     
     // Construtors
     
+    public Account(){
+        
+        this.id = ++Account.ACCOUNT_ID;
+        this.DeviceList = new ArrayList<Device>();
+    }
+    
     // Clone Construtor
     
-    // Interface Getters & Setters
+    public Account(Account a){
+
+    this.id = a.getID();
+    this.DeviceList = a.getDevList();
+    }
+    
+    // Instance Getters & Setters
+    
+    public long getID(){return this.id;}
+    public ArrayList<Device> getDevList(){
+        
+        ArrayList<Device> temp = new ArrayList<Device>();
+        for(Device d : this.DeviceList){
+            temp.add(d.clone());
+        }
+        return temp;
+    }
+    
     
     // Methods
-
+    public Account clone(){return new Account(this);}
+    public boolean equals(Account a){
+        
+        if(this.id == a.getID()){
+            return true;
+        }
+        return false;
+    }
     
 }
