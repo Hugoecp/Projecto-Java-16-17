@@ -9,9 +9,7 @@ public class Account {
     
     // Class Getters & Setters
     
-    public static long getACCOUNT_ID() {
-        return ACCOUNT_ID;
-    }
+    public static long getACCOUNT_ID(){return ACCOUNT_ID;}
     
     // Interface variavels
     
@@ -47,15 +45,30 @@ public class Account {
         return temp;
     }
     
-    
     // Methods
-    public Account clone(){return new Account(this);}
-    public boolean equals(Account a){
+    public boolean addDevice(Device d){
         
-        if(this.id == a.getID()){
+        if(this.DeviceList.contains(d)){
+            return false;
+        }else{
+            this.DeviceList.add(d.clone());
+        }
+        return true;
+    }
+    
+    public boolean removeDevice(Device d){
+        
+        if(this.DeviceList.contains(d)){
+            this.DeviceList.remove(d);
             return true;
         }
         return false;
-    }
+    } 
+    
+    @Override
+    public Account clone(){return new Account(this);}
+    
+    public boolean equals(Account a){return this.id == a.getID();}
+        
     
 }

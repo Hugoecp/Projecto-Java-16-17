@@ -23,15 +23,15 @@ public class C_SMS extends Comunications{
     }
 
     public double getSmsSize(){return smsSize;}
-    public void setSmsSize(double smsSize){this.smsSize = smsSize;}
+    public void setSmsSize(double s){this.smsSize = s;}
     public String getSmsBody(){return smsBody;}
-    public void setSmsBody(String smsBody){this.smsBody = smsBody;}
+    public void setSmsBody(String s){this.smsBody = s;}
     
     public C_SMS clone(){return new C_SMS(this);}
     
     public boolean equals(Comunications c){
         
-        if(this.getClass().getName() == c.getClass().getName()){
+        if(this.getClass().getName().equals(c.getClass().getName())){
             if(super.getOriginNumber() == c.getOriginNumber()){
                 if(super.getDestinyNumber() == c.getDestinyNumber()){
                     if(this.smsSize == ((C_SMS)c).smsSize){

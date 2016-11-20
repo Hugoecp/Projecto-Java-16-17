@@ -9,8 +9,8 @@ public class D_Phone extends Device{
     public D_Phone(long n, String nt){
         
         super(n,nt);
-        this.cList = new ArrayList<>();
-        this.logs = new ArrayList<>();
+        this.cList = new ArrayList<Contact>();
+        this.logs = new ArrayList<Comunications>();
     }
     
     public D_Phone(D_Phone p){
@@ -36,12 +36,14 @@ public class D_Phone extends Device{
         }
         return temp;
     }
+    @Override
     public D_Phone clone(){
         return new D_Phone(this);
     }
+    @Override
     public boolean equals(Device d){
         
-        if(this.getClass().getName() == d.getClass().getName()){
+        if(this.getClass().getName().equals(d.getClass().getName())){
             if(super.getNumber() == d.getNumber()){
                 return true;
             }

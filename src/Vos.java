@@ -7,13 +7,27 @@ public class Vos {
         
         // Hugo Inicio
         
+        Account test = new Account();
+        Device temp = new D_Phone(913453452,"4G");
+        test.addDevice(temp);
+        
+        
+        if(test.removeDevice(temp) == true){
+            System.out.println("OK\n");
+        }
+        else{
+            System.out.println("Erro\n");
+        }
         
         // Hugo Fim
         
-        // Tiago Inicio
+        /** Tiago Inicio
         
+        */// Tiago Fim
         
-        // Tiago Fim
+        /** Gusto inicio
+        
+        */// Gusto fim
         
         
         

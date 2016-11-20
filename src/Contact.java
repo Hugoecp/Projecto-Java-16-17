@@ -23,9 +23,9 @@ public class Contact {
     
     // Getters & Setters
 
-    public String getName(){return name;}
+    public String getName(){return this.name;}
     public void setName(String name){this.name = name;}
-    public long getNumber(){return number;}
+    public long getNumber(){return this.number;}
     public void setNumber(long number){this.number = number;}
     
     // Methdos
