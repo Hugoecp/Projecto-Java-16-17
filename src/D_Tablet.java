@@ -48,19 +48,22 @@ public class D_Tablet extends Device{
                 return false;
     }
     
-    public boolean printLogs()
-    {
-        if(super.getLogs().isEmpty())
-            return false;
-        else
-        {
-         for(Comunications c: super.getLogs())
-         {
-             System.out.println("De " + c.getOriginNumber() 
-                     + " Para " + c.getDestinyNumber());
-         }
-         return true;
-        }    
+    public void printRlogs(){
+        
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 0)
+                System.out.println("Numero: " + aux.getOriginNumber() + 
+                        " - " + aux.getClass().getName());
+        }
+    }
+    
+    public void printSlogs(){
+        
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 1)
+                System.out.println("Numero: " + aux.getDestinyNumber() + 
+                        " - " + aux.getClass().getName());
+        }
     }
     
     public boolean equals(Device t)
