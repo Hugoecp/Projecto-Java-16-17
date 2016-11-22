@@ -1,17 +1,22 @@
-
+import java.util.ArrayList;
 
 public class D_Sender extends Device{
+    
+    private ArrayList<Contact> cList;
+    private ArrayList<Comunications> logs;
     
     public D_Sender(long n, String nt){
         
         super(n,nt);
-        
+        this.cList = super.getContact();
+        this.logs = super.getLogs();
     }
     
     public D_Sender(D_Sender ds){
         
         super(ds.getNumber(), ds.getNetworkType());
-        
+        this.cList = ds.getContact();
+        this.logs = ds.getLogs();
     }
     
     public boolean addContact(Contact x){

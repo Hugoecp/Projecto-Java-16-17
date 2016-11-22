@@ -2,9 +2,22 @@ import java.util.ArrayList;
 
 public class D_Tablet extends Device{
     
-    public D_Tablet (long n, String nt){super(n, nt);}
+    private ArrayList<Contact> cList;
+    private ArrayList<Comunications> logs;
     
-    public D_Tablet (D_Tablet t){super(t.getNumber(),t.getNetworkType());}
+    public D_Tablet (long n, String nt){
+        
+        super(n, nt);
+        this.cList = super.getContact();
+        this.logs = super.getLogs();
+        }
+    
+    public D_Tablet (D_Tablet t){
+        
+        super(t.getNumber(),t.getNetworkType());
+        this.cList = t.getCList();
+        this.logs = t.getLogs();
+    }
     
     public ArrayList<Contact> getCList()
     {
