@@ -1,8 +1,6 @@
 
 public class C_VMMS extends Comunications implements Byteable{
     
-
-            
     private String res;
     private String format;
     private double duration;
@@ -37,7 +35,7 @@ public class C_VMMS extends Comunications implements Byteable{
         return 0.0;
     }
         
-    
+    public double comCost(){return PriceList.getC_VMMS();}
     public C_VMMS clone(){return new C_VMMS(this);}
     public boolean equals(Comunications c){
         

@@ -2,7 +2,7 @@
 public class PriceList {
 
     private static double C_Acall=0.12;
-    private static double C_Downloads=0.12;
+    private static double C_Downloads=2.99;
     private static double C_MMS=0.46;
     private static double C_SMS=0.12;
     private static double C_VMMS=0.456;

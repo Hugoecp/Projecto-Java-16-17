@@ -24,6 +24,9 @@ public class C_Downloads extends Comunications implements Byteable{
     
     public double transmitRate(){return this.size/(this.duration/60);}
     
+    public double comCost()
+        {return ((this.size/209715200)*PriceList.getC_Downloads());} //custo por cada 200MB
+    
     public C_Downloads clone(){return new C_Downloads(this);}
     public boolean equals(Comunications c){
         

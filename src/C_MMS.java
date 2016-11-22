@@ -21,24 +21,14 @@ public class C_MMS extends Comunications{
         this.res = c.getRes();
     }
 
-    public long getSize() {
-        return size;
-    }
-    public void setSize(long size) {
-        this.size = size;
-    }
-    public String getFormat() {
-        return format;
-    }
-    public void setFormat(String format) {
-        this.format = format;
-    }
-    public String getRes() {
-        return res;
-    }
-    public void setRes(String res) {
-        this.res = res;
-    }
+    public long getSize(){return this.size;}
+    public void setSize(long s){this.size = s;}
+    public String getFormat(){return this.format;}
+    public void setFormat(String f){this.format = f;}
+    public String getRes(){return this.res;}
+    public void setRes(String r){this.res = r;}
+    
+    public double comCost(){return PriceList.getC_MMS();}
     
     public C_MMS clone(){return new C_MMS(this);}
     public boolean equals(Comunications c){//metodo equals

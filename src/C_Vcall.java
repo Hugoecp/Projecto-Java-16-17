@@ -29,7 +29,7 @@ public class C_Vcall extends Comunications{
         
         return 0.0;
     }
-    
+    public double comCost(){return this.duration*PriceList.getC_Vcall();}
     public C_Vcall clone(){return new C_Vcall(this);}
     public boolean equals(Comunications c){
         

@@ -22,9 +22,10 @@ public class C_SMS extends Comunications{
     public void setSmsSize(double s){this.smsSize = s;}
     public String getSmsBody(){return smsBody;}
     public void setSmsBody(String s){this.smsBody = s;}
-    
+
+
+    public double comCost(){return PriceList.getC_SMS();}
     public C_SMS clone(){return new C_SMS(this);}
-    
     public boolean equals(Comunications c){
         
         if(this.getClass().getName().equals(c.getClass().getName())){

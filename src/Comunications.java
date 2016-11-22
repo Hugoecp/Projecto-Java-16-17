@@ -24,6 +24,7 @@ public abstract class Comunications {
     public void setDestinyNumber(long n){this.destinyNumber = n;}
     public int getControl(){return this.control;}
     
+    public abstract double comCost();
     public abstract boolean equals(Comunications c);
     public abstract Comunications clone();
 }

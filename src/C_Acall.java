@@ -1,6 +1,6 @@
 public class C_Acall extends Comunications{
     
-    private double duration;
+    private double duration; // In minutes
     
     public C_Acall(long on, long dn, int c ,double d){
         
@@ -17,6 +17,9 @@ public class C_Acall extends Comunications{
     public double getDuration(){return this.duration;}
     public void setDuration(double d){this.duration = d;}
     
+    public double comCost(){        
+        return (this.duration/60) * PriceList.getC_Acall();
+    }
     public C_Acall clone(){return new C_Acall(this);}
     public boolean equals(Comunications c){
         
@@ -31,4 +34,6 @@ public class C_Acall extends Comunications{
         }
         return false;
     }
+    
+    
 }
