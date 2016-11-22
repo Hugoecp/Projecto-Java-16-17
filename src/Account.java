@@ -15,7 +15,6 @@ public class Account {//conta
     
     private long id;//numero da conta
     private ArrayList<Device> DeviceList;//array dispositivos
-    //private HashMap<Device, Invoice> accInvoice;
     
     // Construtors
     
@@ -36,6 +35,7 @@ public class Account {//conta
     // Instance Getters & Setters
     
     public long getID(){return this.id;}
+    
     public ArrayList<Device> getDevList(){
         
         ArrayList<Device> temp = new ArrayList<Device>();

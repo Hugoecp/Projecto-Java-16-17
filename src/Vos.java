@@ -9,7 +9,13 @@ public class Vos {
         
         Account test = new Account();
         Device temp = new D_Phone(913453452,"4G");
+        Device temp2 = new D_Phone(913453452,"4G");
+        Device temp3 = new D_Phone(913453452,"4G");
+        Device temp4 = new D_Phone(913453452,"4G");
         test.addDevice(temp);
+        test.addDevice(temp2);
+        test.addDevice(temp3);
+        test.addDevice(temp4);
         
         
         if(test.removeDevice(temp) == true){
@@ -23,10 +29,14 @@ public class Vos {
         
         /** Tiago Inicio
         
+        * 
+        * 
         */// Tiago Fim
         
         /** Gusto inicio
         
+        * 
+        * 
         */// Gusto fim
         
         
