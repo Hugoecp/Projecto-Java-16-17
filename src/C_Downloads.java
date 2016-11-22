@@ -1,7 +1,5 @@
 public class C_Downloads extends Comunications{
 
-    private static double COST = 0.12;
-    
     private double size;
     private double duration;
     

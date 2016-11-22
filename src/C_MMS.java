@@ -1,10 +1,6 @@
 public class C_MMS extends Comunications{
     
-    private static double COST = 0.46;
-    
-    public double getCOST(){return C_MMS.COST;}
-    public void setCOST(double c){C_MMS.COST = c;}
-    
+  
     private long size;//duração
     private String format;//formato de imagem
     private String res;//resolução

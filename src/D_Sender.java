@@ -54,7 +54,7 @@ public class D_Sender extends Device{
     }
     public boolean equals(Device d){
         
-        if(this.getClass().getName() == d.getClass().getName()){
+        if(this.getClass().getName().equals(d.getClass().getName())){
             if(super.getNumber() == d.getNumber()){
                     return true;
             }
@@ -66,7 +66,7 @@ public class D_Sender extends Device{
         
         C_SMS aux= null;
         
-        if(aux.getClass().getName() == c.getClass().getName())
+        if(aux.getClass().getName().equals(c.getClass().getName()))
             return true;
         else return false;
     }
