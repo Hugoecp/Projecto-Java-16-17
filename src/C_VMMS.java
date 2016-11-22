@@ -39,10 +39,10 @@ public class C_VMMS extends Comunications implements Byteable{
     public C_VMMS clone(){return new C_VMMS(this);}
     public boolean equals(Comunications c){
         
-        if(this.getClass().getName() == c.getClass().getName()){
+        if(this.getClass().getName().equals(c.getClass().getName())){
             if(super.getOriginNumber() == ((C_VMMS)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_VMMS)c).getDestinyNumber()){
-                    if(this.res == ((C_VMMS)c).getRes()){
+                    if(this.res.equals(((C_VMMS)c).getRes())){
                         if(this.format.equals(((C_VMMS)c).getFormat())){
                             if(this.duration == ((C_VMMS)c).getDuration()){
                                 return true;

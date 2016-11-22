@@ -33,11 +33,11 @@ public class C_Vcall extends Comunications{
     public C_Vcall clone(){return new C_Vcall(this);}
     public boolean equals(Comunications c){
         
-        if(this.getClass().getName() == c.getClass().getName()){
+        if(this.getClass().getName().equals(c.getClass().getName())){
             if(super.getOriginNumber() == ((C_Vcall)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_Vcall)c).getDestinyNumber()){
                     if(this.getDuration() == ((C_Vcall)c).getDuration()){
-                        if(this.getRes() == ((C_Vcall)c).getRes()){
+                        if(this.getRes().equals(((C_Vcall)c).getRes())){
                             return true;
                         }
                     }

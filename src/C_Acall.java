@@ -23,7 +23,7 @@ public class C_Acall extends Comunications{
     public C_Acall clone(){return new C_Acall(this);}
     public boolean equals(Comunications c){
         
-        if(this.getClass().getName() == c.getClass().getName()){
+        if(this.getClass().getName().equals(c.getClass().getName())){
             if(super.getOriginNumber() == ((C_Acall)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_Acall)c).getDestinyNumber()){
                     if(this.getDuration() == ((C_Acall)c).getDuration()){

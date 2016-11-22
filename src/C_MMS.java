@@ -33,7 +33,7 @@ public class C_MMS extends Comunications{
     public C_MMS clone(){return new C_MMS(this);}
     public boolean equals(Comunications c){//metodo equals
         
-        if(this.getClass().getName() == c.getClass().getName()){
+        if(this.getClass().getName().equals(c.getClass().getName())){
             if(super.getOriginNumber() == ((C_MMS)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_MMS)c).getDestinyNumber()){
                     if(((C_MMS)c).size == this.getSize()){
