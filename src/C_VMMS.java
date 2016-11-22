@@ -7,9 +7,9 @@ public class C_VMMS extends Comunications{
     private String format;
     private double duration;
     
-    public C_VMMS(long on, long ds, String r, String f, double d){
+    public C_VMMS(long on, long ds, int c, String r, String f, double d){
         
-        super(on,ds);
+        super(on,ds,c);
         this.res = f;
         this.format = f;
         this.duration = d;
@@ -17,7 +17,7 @@ public class C_VMMS extends Comunications{
     
     public C_VMMS(C_VMMS c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(), c.getControl());
         this.res = c.getRes();
         this.format = c.getFormat();
         this.duration = c.getDuration();

@@ -5,9 +5,9 @@ public class C_MMS extends Comunications{
     private String format;//formato de imagem
     private String res;//resolução
     
-    public C_MMS(long on, long dn, long s, String f, String r){
+    public C_MMS(long on, long dn, int c, long s, String f, String r){
         
-        super(on,dn);//numero de dispositivo e o destino
+        super(on,dn,c);//numero de dispositivo e o destino
         this.size = s;
         this.format = f;
         this.res = r;
@@ -15,7 +15,7 @@ public class C_MMS extends Comunications{
     
     public C_MMS(C_MMS c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(), c.getControl());
         this.size = c.getSize();
         this.format = c.getFormat();
         this.res = c.getRes();

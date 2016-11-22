@@ -1,46 +1,42 @@
 
-import java.util.ArrayList;
 
 public class D_Phone extends Device{
  
-    private ArrayList<Contact> cList;//lista de contactos
-    private ArrayList<Comunications> logs;//list de logs
-
+    
     public D_Phone(long n, String nt){
         
         super(n,nt);//numero do dispositivo e tipo de rede
-        this.cList = new ArrayList<Contact>();
-        this.logs = new ArrayList<Comunications>();
     }
     
     public D_Phone(D_Phone p){
         
         super(p.getNumber(), p.getNetworkType());
-        this.cList = p.getCList();
-        this.logs = p.getLogs();
     }
     
-    public ArrayList<Contact> getCList(){
+    public void printRlogs(){
         
-        ArrayList<Contact> temp = new ArrayList<Contact>();
-        for(Contact c : this.cList){
-            temp.add(c.clone());
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 0)
+                System.out.println("Numero: " + aux.getOriginNumber() + 
+                        " - " + aux.getClass().getName());
         }
-        return temp;
     }
-    public ArrayList<Comunications> getLogs(){
+    
+    public void printSlogs(){
         
-        ArrayList<Comunications> temp = new ArrayList<Comunications>();
-        for(Comunications c : this.logs){
-            temp.add(c.clone());
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 1)
+                System.out.println("Numero: " + aux.getDestinyNumber() + 
+                        " - " + aux.getClass().getName());
         }
-        return temp;
     }
-    @Override
+    
+    
+    
     public D_Phone clone(){
         return new D_Phone(this);
     }
-    @Override
+    
     public boolean equals(Device d){
         
         if(this.getClass().getName().equals(d.getClass().getName())){

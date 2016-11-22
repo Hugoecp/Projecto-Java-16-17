@@ -2,15 +2,15 @@ public class C_Acall extends Comunications{
     
     private double duration;
     
-    public C_Acall(long on, long dn, double d){
+    public C_Acall(long on, long dn, int c ,double d){
         
-        super(on,dn);
+        super(on,dn,c);
         this.duration = d;//duração de chamada
     }
     
     public C_Acall(C_Acall c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(),c.getControl());
         this.duration = c.getDuration();
     }
     

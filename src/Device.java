@@ -60,10 +60,37 @@ public abstract class Device {
     }
     
     // Methods    
-
-    public abstract boolean printLogs();
-    public abstract boolean addContact(Contact x);
-    public abstract boolean removeContact(Contact y);
+    public boolean addContact(Contact x){
+        
+        if(this.cList.contains(x))
+            return false;
+        else{
+            this.cList.add(x.clone());
+            return true;
+        }
+    }
+    public boolean removeContact(Contact y){
+        
+        if(!this.cList.contains(y))
+            return false;
+        else{
+            this.cList.remove(y);
+            return true;
+        }
+        
+    }
+    public boolean addLog(Comunications c){return this.Logs.add(c.clone());}
+    public boolean removeLog(Comunications c){
+        if(!this.Logs.contains(c))
+            return false;
+        else{
+            this.Logs.remove(c);
+            return true;
+        }
+    }
+    
+    public abstract void printRlogs();
+    public abstract void printSlogs();
     public abstract Device clone();
     public abstract boolean equals(Device d);
 }

@@ -1,10 +1,6 @@
 
-import java.util.ArrayList;
 
 public class D_Sender extends Device{
-    
-   
-    
     
     public D_Sender(long n, String nt){
         
@@ -18,9 +14,6 @@ public class D_Sender extends Device{
         
     }
     
-   
-   
-   
     public boolean addContact(Contact x){
         
         if(super.getContact().contains(x)){

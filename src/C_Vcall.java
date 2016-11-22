@@ -4,16 +4,16 @@ public class C_Vcall extends Comunications{
     private double duration;
     private String res;
     
-    public C_Vcall(long on, long dn, double d, String r){
+    public C_Vcall(long on, long dn, int c, double d, String r){
         
-        super(on,dn);
+        super(on,dn,c);
         this.duration = d;//duraçao de chamada
         this.res = r;//resoluçao usada
     }
     
     public C_Vcall(C_Vcall c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(), c.getControl());
         this.duration = c.getDuration();
         this.res = c.getRes();
     }

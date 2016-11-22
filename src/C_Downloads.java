@@ -3,16 +3,16 @@ public class C_Downloads extends Comunications{
     private double size;
     private double duration;
     
-    public C_Downloads(long on, long s, long d){
+    public C_Downloads(long on, long s, int c, long d){
         
-        super(on,119);
+        super(on,119,c);
         this.size = s;//tamanho do programa em byts descarregado
         this.duration = d;//duração do download
     }
     
     public C_Downloads(C_Downloads c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(), c.getControl());
         this.size = c.getSize();
         this.duration = c.getDuration();
     }

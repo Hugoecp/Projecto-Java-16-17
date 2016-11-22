@@ -4,16 +4,16 @@ public class C_SMS extends Comunications{
     private double smsSize = 0.0;//tamanho da mensagem
     private String smsBody = "";//respetivo texto da mensagem
     
-    public C_SMS(long on, long dn, double size, String body){
+    public C_SMS(long on, long dn, int c, double size, String body){
         
-        super(on, dn);//numero 
+        super(on, dn, c);//numero 
         this.smsSize = size;
         this.smsBody = body;
     }
     
     public C_SMS(C_SMS c){
         
-        super(c.getOriginNumber(), c.getDestinyNumber());
+        super(c.getOriginNumber(), c.getDestinyNumber(), c.getControl());
         this.smsSize = c.getSmsSize();
         this.smsBody = c.getSmsBody();
     }
