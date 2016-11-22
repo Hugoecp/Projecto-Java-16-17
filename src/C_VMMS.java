@@ -1,5 +1,5 @@
 
-public class C_VMMS extends Comunications{
+public class C_VMMS extends Comunications implements Byteable{
     
 
             
@@ -29,6 +29,14 @@ public class C_VMMS extends Comunications{
     public void setFormat(String format){this.format = format;}
     public double getDuration(){return duration;}
     public void setDuration(double duration) {this.duration = duration;}
+    
+    public double transmitRate(){
+        
+        //TODO criar o metodo
+        
+        return 0.0;
+    }
+        
     
     public C_VMMS clone(){return new C_VMMS(this);}
     public boolean equals(Comunications c){

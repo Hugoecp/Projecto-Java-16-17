@@ -23,6 +23,13 @@ public class C_Vcall extends Comunications{
     public String getRes(){return this.res;}
     public void setRed(String r){this.res = r;}
     
+    public double transmitRate(){
+        
+        //TODO criar o metodo
+        
+        return 0.0;
+    }
+    
     public C_Vcall clone(){return new C_Vcall(this);}
     public boolean equals(Comunications c){
         

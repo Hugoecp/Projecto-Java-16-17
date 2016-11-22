@@ -1,12 +1,12 @@
-public class C_Downloads extends Comunications{
+public class C_Downloads extends Comunications implements Byteable{
 
-    private double size;
-    private double duration;
+    private double size; // em bytes
+    private double duration; //em minutos
     
-    public C_Downloads(long on, long s, int c, long d){
+    public C_Downloads(long on, int c,  double s, double d){
         
         super(on,119,c);
-        this.size = s;//tamanho do programa em byts descarregado
+        this.size = s;//tamanho do programa em bytes descarregado
         this.duration = d;//duração do download
     }
     
@@ -17,15 +17,17 @@ public class C_Downloads extends Comunications{
         this.duration = c.getDuration();
     }
 
-    public double getSize(){return size;}
+    public double getSize(){return this.size;}
     public void setSize(double size){this.size = size;}
-    public double getDuration(){return duration;}
+    public double getDuration(){return this.duration;}
     public void setDuration(double duration){this.duration = duration;}
+    
+    public double transmitRate(){return this.size/(this.duration/60);}
     
     public C_Downloads clone(){return new C_Downloads(this);}
     public boolean equals(Comunications c){
         
-        if(this.getClass().getName() == ((C_Downloads)c).getClass().getName()){
+        if(this.getClass().getName().equals(((C_Downloads)c).getClass().getName())){
             if(super.getOriginNumber() == ((C_Downloads)c).getOriginNumber()){
                 if(super.getDestinyNumber() == ((C_Downloads)c).getDestinyNumber()){
                     if(this.getSize() == ((C_Downloads)c).getSize()){

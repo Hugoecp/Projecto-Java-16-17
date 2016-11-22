@@ -3,9 +3,7 @@ public abstract class Comunications {
     private long originNumber; //numero de dispositivo
     private long destinyNumber; //numero destino do dispositivo
     private int control; //Controlo de comunicacao enviada(= 1) ou recebida(= 0)
-                         
-    
-    
+
     public Comunications(long on, long dn, int c){
         
         this.originNumber = on;

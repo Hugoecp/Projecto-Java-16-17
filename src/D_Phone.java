@@ -31,8 +31,6 @@ public class D_Phone extends Device{
         }
     }
     
-    
-    
     public D_Phone clone(){
         return new D_Phone(this);
     }

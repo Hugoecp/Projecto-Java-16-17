@@ -23,7 +23,7 @@ public class D_Sender extends Device{
         }
         return true;
     }
-     public boolean removeContact(Contact y){
+    public boolean removeContact(Contact y){
         
         if(super.getContact().contains(y)){
             super.getContact().remove(y);
@@ -31,15 +31,14 @@ public class D_Sender extends Device{
         }
         return false;
     } 
-   public void printRlogs(){
-        
-        for(Comunications aux : super.getLogs()){
-            if(aux.getControl() == 0)
-                System.out.println("Numero: " + aux.getOriginNumber() + 
-                        " - " + aux.getClass().getName());
-        }
-    }
-    
+    public void printRlogs(){
+
+         for(Comunications aux : super.getLogs()){
+             if(aux.getControl() == 0)
+                 System.out.println("Numero: " + aux.getOriginNumber() + 
+                         " - " + aux.getClass().getName());
+         }
+     }
     public void printSlogs(){
         
         for(Comunications aux : super.getLogs()){
@@ -63,10 +62,8 @@ public class D_Sender extends Device{
     
     public boolean AcceptComs(Comunications c){
         
-        C_SMS aux= null;
-        
-        if(aux.getClass().getName().equals(c.getClass().getName()))
+        if(c.getClass().getName().equals("C_SMS"))
             return true;
-        else return false;
+        return false;
     }
 }
