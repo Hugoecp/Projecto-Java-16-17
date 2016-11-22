@@ -12,7 +12,7 @@ public abstract class Device {
     private long number;//numero do dispositivo
     private String networkType;//tipo de rede
     private ArrayList<Comunications> Logs;//registo de comunicações(recebido e enviados)
-    private ArrayList<Contact> list;//lista de contactos
+    private ArrayList<Contact> cList;//lista de contactos
     // Construtors
     
     public Device(long n, String nt){
@@ -20,13 +20,7 @@ public abstract class Device {
         this.number = n;
         this.networkType = nt;
         this.Logs = new ArrayList<Comunications>();
-    }
-    
-    public Device(){
-        
-        this.number = 0;
-        this.networkType = "";
-        this.Logs = new ArrayList<Comunications>();
+        this.cList = new ArrayList<Contact>();
     }
     
     // Clone Construtor
@@ -35,7 +29,9 @@ public abstract class Device {
         
         this.number = d.getNumber();
         this.networkType = d.getNetworkType();
-        //this.Logs = d.getLogs();
+        this.Logs = d.getLogs();
+        this.cList = d.getContact();
+        
     }
      
     // Interface Getters & Setters
@@ -45,7 +41,6 @@ public abstract class Device {
     public String getNetworkType(){return this.networkType;}
     public void setNetworkType(String networkType){
         this.networkType = networkType;}
-    
     public ArrayList<Comunications> getLogs(){
         
         ArrayList<Comunications> temp = new ArrayList<Comunications>();
@@ -55,9 +50,18 @@ public abstract class Device {
         }
         return temp;
     }
+    public ArrayList<Contact> getContact(){
+        
+        ArrayList<Contact> temp = new ArrayList<Contact>();
+        for(Contact aux : this.cList){
+            temp.add(aux.clone());
+        }
+        return temp;
+    }
     
     // Methods    
 
+    public abstract boolean printLogs();
     public abstract boolean addContact(Contact x);
     public abstract boolean removeContact(Contact y);
     public abstract Device clone();
