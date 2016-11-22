@@ -68,7 +68,7 @@ public class Client {
         }
         return false;
     }
-    
+        
     public boolean equals(Client e){return e.id == this.id;}//metodo equals
 
     public String toString() {

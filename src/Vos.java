@@ -1,9 +1,23 @@
 
+import java.util.ArrayList;
+
+
 public class Vos {
 
-   
+    public static void listClient(ArrayList<Client> c){
+            
+            for(Client aux : c){
+                System.out.println("O cliente: " + aux.getName() + " com o ID: " 
+                + aux.getId());
+            }
+            
+    }
+    
+    
     public static void main(String[] args) {
      
+        ArrayList<Client> ListClientes = new ArrayList<Client>();
+        
         
         // Hugo Inicio
         
@@ -32,15 +46,7 @@ public class Vos {
         aux1.addLog(c2);
         aux2.addLog(c3);
         
-        System.out.println("receive logs");
-        aux1.printRlogs();
-        System.out.println("send logs tablet");
-        aux2.printSlogs();
-        System.out.println("send logs telm");        
-        aux1.printSlogs();
-        System.out.println("bytable");
         
-        System.out.println(" " + Math.round(c3.transmitRate()/8) + " bps");
         
         
         // Hugo Fim
