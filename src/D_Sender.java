@@ -31,17 +31,23 @@ public class D_Sender extends Device{
         }
         return false;
     } 
-     // private ArrayList<Comunications> Logs;
-    public boolean printLogs()
-     {
-         if(super.getLogs().isEmpty())
-             return false;
-         for(Comunications c : super.getLogs()){
-            System.out.println("DE " + c.getOriginNumber() +
-                    " PARA " + c.getDestinyNumber());
-         }
-         return true;
-     } 
+   public void printRlogs(){
+        
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 0)
+                System.out.println("Numero: " + aux.getOriginNumber() + 
+                        " - " + aux.getClass().getName());
+        }
+    }
+    
+    public void printSlogs(){
+        
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 1)
+                System.out.println("Numero: " + aux.getDestinyNumber() + 
+                        " - " + aux.getClass().getName());
+        }
+    }
     public D_Sender clone(){
         return new D_Sender(super.getNumber(), super.getNetworkType());
     }
