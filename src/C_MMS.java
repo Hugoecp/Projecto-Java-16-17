@@ -5,13 +5,13 @@ public class C_MMS extends Comunications{
     public double getCOST(){return C_MMS.COST;}
     public void setCOST(double c){C_MMS.COST = c;}
     
-    private long size;
-    private String format;
-    private String res;
+    private long size;//duração
+    private String format;//formato de imagem
+    private String res;//resolução
     
     public C_MMS(long on, long dn, long s, String f, String r){
         
-        super(on,dn);
+        super(on,dn);//numero de dispositivo e o destino
         this.size = s;
         this.format = f;
         this.res = r;
@@ -45,7 +45,7 @@ public class C_MMS extends Comunications{
     }
     
     public C_MMS clone(){return new C_MMS(this);}
-    public boolean equals(Comunications c){
+    public boolean equals(Comunications c){//metodo equals
         
         if(this.getClass().getName() == c.getClass().getName()){
             if(super.getOriginNumber() == ((C_MMS)c).getOriginNumber()){

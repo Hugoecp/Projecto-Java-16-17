@@ -19,8 +19,8 @@ public class C_Vcall extends Comunications{
     public C_Vcall(long on, long dn, double d, String r){
         
         super(on,dn);
-        this.duration = d;
-        this.res = r;
+        this.duration = d;//duraçao de chamada
+        this.res = r;//resoluçao usada
     }
     
     public C_Vcall(C_Vcall c){

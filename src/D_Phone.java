@@ -3,12 +3,12 @@ import java.util.ArrayList;
 
 public class D_Phone extends Device{
  
-    private ArrayList<Contact> cList;
-    private ArrayList<Comunications> logs;
+    private ArrayList<Contact> cList;//lista de contactos
+    private ArrayList<Comunications> logs;//list de logs
 
     public D_Phone(long n, String nt){
         
-        super(n,nt);
+        super(n,nt);//numero do dispositivo e tipo de rede
         this.cList = new ArrayList<Contact>();
         this.logs = new ArrayList<Comunications>();
     }

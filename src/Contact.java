@@ -1,7 +1,7 @@
 public class Contact {
     
-    private String name;
-    private long number;
+    private String name;//nome do contacto
+    private long number;//numero do contacto
     
     public Contact(String n, long nb){
         

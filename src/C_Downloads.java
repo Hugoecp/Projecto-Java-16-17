@@ -8,8 +8,8 @@ public class C_Downloads extends Comunications{
     public C_Downloads(long on, long s, long d){
         
         super(on,119);
-        this.size = s;
-        this.duration = d;
+        this.size = s;//tamanho do programa em byts descarregado
+        this.duration = d;//duração do download
     }
     
     public C_Downloads(C_Downloads c){

@@ -6,8 +6,8 @@ public abstract class Comunications {
     
     public Comunications(long on, long dn){
         
-        this.originNumber = on;
-        this.destinyNumber = dn;
+        this.originNumber = on;//numero de dispositivo
+        this.destinyNumber = dn;//destino do dispositivo
     }
     
     public Comunications(Comunications c){

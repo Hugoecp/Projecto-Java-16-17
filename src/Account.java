@@ -1,7 +1,7 @@
 
 import java.util.ArrayList;
 
-public class Account {
+public class Account {//conta
     
     // Class variavels
     
@@ -13,8 +13,8 @@ public class Account {
     
     // Interface variavels
     
-    private long id;
-    private ArrayList<Device> DeviceList;
+    private long id;//numero da conta
+    private ArrayList<Device> DeviceList;//array dispositivos
     //private HashMap<Device, Invoice> accInvoice;
     
     // Construtors

@@ -5,12 +5,12 @@ public class C_SMS extends Comunications{
     public double getCOST(){return C_SMS.COST;}
     public void setCOST(double c){C_SMS.COST=c;}
     
-    private double smsSize = 0.0;
-    private String smsBody = "";
+    private double smsSize = 0.0;//tamanho da mensagem
+    private String smsBody = "";//respetivo texto da mensagem
     
     public C_SMS(long on, long dn, double size, String body){
         
-        super(on, dn);
+        super(on, dn);//numero 
         this.smsSize = size;
         this.smsBody = body;
     }

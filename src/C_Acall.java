@@ -10,7 +10,7 @@ public class C_Acall extends Comunications{
     public C_Acall(long on, long dn, double d){
         
         super(on,dn);
-        this.duration = d;
+        this.duration = d;//duração de chamada
     }
     
     public C_Acall(C_Acall c){
