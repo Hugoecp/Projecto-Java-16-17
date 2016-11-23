@@ -1,9 +1,13 @@
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 
 public class Vos {
 
+    // Hugo Inicio
+    
     public static void listClient(ArrayList<Client> c){
             
             for(Client aux : c){
@@ -13,10 +17,56 @@ public class Vos {
             
     }
     
+    public static int ControlInput(int max, int m, BufferedReader input){
+        
+        int userChoice = -1;
+        String cliReader;
+        boolean rerun = true; 
+        HandleMenus menu = new HandleMenus();
+        menu.callMenu(m);
+        
+        while(rerun){
+            try{
+                cliReader = input.readLine();
+                userChoice = Integer.parseInt(cliReader);
+                if(userChoice <= max && userChoice >= 0){
+                    rerun = false;
+            }else{
+                
+                    System.out.println("Opcao invalida. Apenas numeros de 0-"
+                    + max + ".");
+                }
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex2){
+                menu.callMenu(m);
+                System.out.println("Opcao invalida. Apenas numeros de 0-"
+                    + max + ".");
+            }
+        }
+        return userChoice;
+    }
     
+    // Hugo Fim
+
+    // Tiago Inicio
+
+
+    // Tiago Fim
+
+    // Gusto inicio
+
+    // Gusto fim
+
     public static void main(String[] args) {
      
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in)); 
+        HandleMenus callmenu = new HandleMenus();
+        ControlInput(5,1,input);
+        
         ArrayList<Client> ListClientes = new ArrayList<Client>();
+        
+        
         
         
         // Hugo Inicio
@@ -45,7 +95,6 @@ public class Vos {
         aux1.addLog(c1);
         aux1.addLog(c2);
         aux2.addLog(c3);
-        
         
         
         
