@@ -1,5 +1,8 @@
 
-public class PriceList {
+import java.io.Serializable;
+
+
+public class PriceList implements Serializable{
 
     private static double C_Acall=0.12;
     private static double C_Downloads=2.99;

@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author FallenAngel
- */
-public class Invoice {
+import java.io.Serializable;
+
+
+public class Invoice implements Serializable {
 
     // Class variavels
     

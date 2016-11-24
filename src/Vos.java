@@ -2,28 +2,70 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Vos {
+public class Vos implements Serializable{
 
     // Hugo Inicio
-    
-    public static void listClient(ArrayList<Client> c){
-            
-            for(Client aux : c){
-                System.out.println("O cliente: " + aux.getName() + " com o ID: " 
-                + aux.getId());
-            }
-            
+       
+    public static class MainMenu implements HandleMenus{
+        
+        @Override
+        public void printMenu(){
+           
+        System.out.println("******************************************");
+        System.out.println("******************************************");
+        System.out.println("**                                      **");
+        System.out.println("**                   Vos                **");
+        System.out.println("**                                      **");
+        System.out.println("**    Main Menu                         **");
+        System.out.println("**                                      **");
+        System.out.println("**  1) Clientes                         **");
+        System.out.println("**  2) Contas                           **");
+        System.out.println("**  3) Dispositivos                     **");
+        System.out.println("**  4) Comunicações                     **");
+        System.out.println("**  5) Facturação                       **");
+        System.out.println("**                                      **");
+        System.out.println("**                 0) Guardar e sair    **");
+        System.out.println("**                                      **");
+        System.out.println("******************************************");
+        System.out.println("******************************************");
+       }
     }
     
-    public static int ControlInput(int max, int m, BufferedReader input){
+    public static class ClientMenu implements HandleMenus{
+        
+        @Override
+        public void printMenu(){
+        
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+            System.out.println("**                                  **");
+            System.out.println("**          Cliente                 **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**  1) ????????                     **");
+            System.out.println("**  2) ??????????                   **");
+            System.out.println("**  3) ??????????                   **");
+            System.out.println("**  4) ??????????                   **");
+            System.out.println("**  5) ??????????                   **");
+            System.out.println("**                                  **");
+            System.out.println("**                 0) Back          **");
+            System.out.println("**                                  **");
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+       }
+    }   
+    
+    public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
         
         int userChoice = -1;
         String cliReader;
         boolean rerun = true; 
-        HandleMenus menu = new HandleMenus();
-        menu.callMenu(m);
+        
+        if(menu !=null)
+            menu.printMenu();
         
         while(rerun){
             try{
@@ -39,12 +81,20 @@ public class Vos {
             }catch (IOException ex){
                 ex.printStackTrace();
             }catch(NumberFormatException ex2){
-                menu.callMenu(m);
+                if(menu !=null)
+                    menu.printMenu();
                 System.out.println("Opcao invalida. Apenas numeros de 0-"
                     + max + ".");
             }
         }
         return userChoice;
+    }
+    
+    public static void listClient(ArrayList<Client> c){
+        for(Client aux : c){
+            System.out.println("O cliente: " + aux.getName() + " com o ID: " 
+            + aux.getId());
+        }
     }
     
     // Hugo Fim
@@ -55,23 +105,8 @@ public class Vos {
     // Tiago Fim
 
     // Gusto inicio
-
-    // Gusto fim
-
-    public static void main(String[] args) {
-     
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in)); 
-        HandleMenus callmenu = new HandleMenus();
-        ControlInput(5,1,input);
-        
-        ArrayList<Client> ListClientes = new ArrayList<Client>();
-        
-        
-        
-        
-        // Hugo Inicio
-        
-        Contact test1 = new Contact("Nome1", 911231231);
+    /**
+     Contact test1 = new Contact("Nome1", 911231231);
         Contact test2 = new Contact("Nome2", 911231232);
         Contact test3 = new Contact("Nome3", 911231233);
         Contact test4 = new Contact("Nome4", 911231234);
@@ -94,23 +129,46 @@ public class Vos {
         
         aux1.addLog(c1);
         aux1.addLog(c2);
-        aux2.addLog(c3);
+        aux2.addLog(c3); 
+     * @param args
+     */
+    // Gusto fim
+
+    public static void main(String[] args) {
+     
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in)); 
+        HandleMenus mainMenu = new MainMenu();
+        HandleMenus clientMenu = new ClientMenu();
+        
+        ArrayList<Client> ListClientes = new ArrayList<Client>();
+        
+        int userChoice = ControlInput(5,mainMenu,input);
+        int choice = -1;
+        
+        switch(userChoice){
+            
+            case 0: System.out.println("A guardar e a sair.");
+                    break;
+            
+            case 1: choice = ControlInput(5,clientMenu,input);
+                    break;
+            case 2: //choice = ControlInput(,,input);
+                    break;
+                    
+            case 3: //choice = ControlInput(,,input);
+                    break;
+            
+            case 4: //choice = ControlInput(,,input);
+                    break;
+            
+            case 5: //choice = ControlInput(,,input);
+                    break;
+            
+            default://choice == ControlInput(5,mainMenu,input);
+                    break;
+        }
         
         
-        
-        // Hugo Fim
-        
-        /** Tiago Inicio
-        
-        * 
-        * 
-        */// Tiago Fim
-        
-        /** Gusto inicio
-        
-        * 
-        * 
-        */// Gusto fim
         
         
         

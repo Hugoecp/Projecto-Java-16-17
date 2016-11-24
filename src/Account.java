@@ -1,7 +1,8 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Account {//conta
+public class Account implements Serializable{//conta
     
     // Class variavels
     

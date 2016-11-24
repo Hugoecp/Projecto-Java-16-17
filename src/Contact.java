@@ -1,4 +1,7 @@
-public class Contact {
+
+import java.io.Serializable;
+
+public class Contact implements Serializable{
     
     private String name;//nome do contacto
     private long number;//numero do contacto

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 //classe dispositivo
-public abstract class Device {
+public abstract class Device implements Serializable{
     
     // Class variavels
     

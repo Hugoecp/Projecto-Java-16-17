@@ -1,4 +1,7 @@
-public abstract class Comunications {
+
+import java.io.Serializable;
+
+public abstract class Comunications implements Serializable {
     
     private long originNumber; //numero de dispositivo
     private long destinyNumber; //numero destino do dispositivo
