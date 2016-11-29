@@ -74,15 +74,12 @@ public class Vos implements Serializable{
                 if(userChoice <= max && userChoice >= 0){
                     rerun = false;
             }else{
-                
-                    System.out.println("Opcao invalida. Apenas numeros de 0-"
-                    + max + ".");
-                }
+                System.out.println("Opcao invalida. Apenas numeros de 0-"
+                + max + ".");
+            }
             }catch (IOException ex){
                 ex.printStackTrace();
             }catch(NumberFormatException ex2){
-                if(menu !=null)
-                    menu.printMenu();
                 System.out.println("Opcao invalida. Apenas numeros de 0-"
                     + max + ".");
             }
@@ -137,12 +134,14 @@ public class Vos implements Serializable{
     public static void main(String[] args) {
      
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in)); 
+        
+        // Variaveis de Controlo de Menus para Parametros de funcoes
         HandleMenus mainMenu = new MainMenu();
         HandleMenus clientMenu = new ClientMenu();
         
         ArrayList<Client> ListClientes = new ArrayList<Client>();
         
-        int userChoice = ControlInput(5,mainMenu,input);
+        int userChoice = ControlInput(5,mainMenu,input); // 1a chamada ao Menu Principal
         int choice = -1;
         
         switch(userChoice){
@@ -151,6 +150,7 @@ public class Vos implements Serializable{
                     break;
             
             case 1: choice = ControlInput(5,clientMenu,input);
+                    
                     break;
             case 2: //choice = ControlInput(,,input);
                     break;
@@ -168,11 +168,11 @@ public class Vos implements Serializable{
                     break;
         }
         
-        
-        
-        
-        
-        
+        try{
+            input.close();
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
         
     }
     

@@ -66,6 +66,27 @@ public class Account implements Serializable{//conta
         return false;
     } 
     
+    public long getAccIDbyDevNum(long num){
+        
+        for(Device aux : this.DeviceList){
+            if(aux.getNumber() == num){
+                return this.getID();
+            }
+        }
+        return 0;
+    }
+    public ArrayList<Device> getDevListbyID(long num){
+        
+        if(this.getAccIDbyDevNum(num) != 0){
+            ArrayList<Device> temp = new ArrayList<Device>();
+            for(Device aux : this.DeviceList){
+                temp.add(aux.clone());
+            }
+            return temp;
+        }
+        return null;
+    }
+    
     @Override
     public Account clone(){return new Account(this);}
     
