@@ -1,4 +1,4 @@
-public class C_Vcall extends Comunications{
+public class C_Vcall extends Comunications implements Byteable{
     
     
     private double duration;
