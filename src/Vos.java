@@ -57,7 +57,53 @@ public class Vos implements Serializable{
             System.out.println("**************************************");
             System.out.println("**************************************");
        }
-    }   
+    } 
+    
+    public static class AccountMenu implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+            System.out.println("**                                  **");
+            System.out.println("**           Contas                 **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**  1) Adicionar Conta              **");
+            System.out.println("**  2) Listar contas de             **");
+            System.out.println("**     um cliente                   **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**                 0) Back          **");
+            System.out.println("**                                  **");
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+        }
+    }
+    
+    public static class AccountSubMenu implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+            System.out.println("**                                  **");
+            System.out.println("**         Lista de Contas          **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**  1) Por ID de Conta              **");
+            System.out.println("**  2) Por cliente escolhido de     **");
+            System.out.println("**     uma lista existente          **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
+            System.out.println("**                 0) Back          **");
+            System.out.println("**                                  **");
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+        }
+    }
     
     public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
         
@@ -88,15 +134,69 @@ public class Vos implements Serializable{
         return userChoice;
     }
     
+    public static void holdEnterCont(){ 
+        System.out.print("");
+        try{System.in.read();}  
+        catch(Exception e){}  
+ }
+    
     public static void listClient(ArrayList<Client> c){
+        int index=0;
         for(Client aux : c){
-            System.out.println("O cliente: " + aux.getName() + " com o ID: " 
-            + aux.getId());
+            System.out.println(++index + ": O cliente: " 
+                    + aux.getName() + " com o ID: " + aux.getId());
         }
     }
     
-    public static void addClient(ArrayList<Client> c){
+    public static void addClient(ArrayList<Client> c, BufferedReader input){
         
+        String nome="";
+        System.out.println("Insira o nome do cliente: ");
+        try{
+            nome = input.readLine();
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
+        Client temp = new Client(nome);
+        c.add(temp.clone());
+        System.out.println("Cliente " + nome + " com o ID " + temp.getId() + " criado.");
+    }
+    
+    public static void addAccount(BufferedReader input, ArrayList<Client> c){
+        
+        System.out.println("Escolha o cliente para o qual vai adicionar a conta:");
+        listClient(c);
+        System.out.println((c.size()+1) + ": adicionar novo cliente.");
+        holdEnterCont();
+        
+        boolean rerun = true;
+        String option;
+        int userChoice = -1;
+        int max = c.size() + 1;
+        while(rerun){
+            try{
+                option = input.readLine();
+                userChoice = Integer.parseInt(option);
+                if((userChoice < max) && (userChoice >= 1)){ //TODO Algo mto esquisito se passa nesta funcao.
+                    rerun = false;
+            }else{
+                System.out.println("Opcao invalida. Apenas numeros de 1-"
+                + max + ".");
+            }
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex2){
+                System.out.println("Opcao invalida. Apenas numeros de 1-"
+                    + max + ".");
+            }
+        }
+        if(userChoice == max){
+            addClient(c,input);
+        }else{
+            long temp;
+            temp = c.get(userChoice-1).getId();
+            System.out.println("- " + temp +" -");
+        }
         
     }
     
@@ -118,6 +218,72 @@ public class Vos implements Serializable{
                     return false;
             default: return false;
         }
+    }
+    
+    public static boolean callMainMenu(BufferedReader input, ArrayList<Client> c){
+        
+        // Variaveis de Controlo de Menus para Parametros de funcoes
+        
+        HandleMenus mainMenu = new MainMenu();
+        HandleMenus clientMenu = new ClientMenu();
+        HandleMenus accountMenu = new AccountMenu();
+        HandleMenus accountSubMenu = new AccountSubMenu();
+        
+        int userChoice = ControlInput(5,mainMenu,input);
+        int choice = -1;
+        
+        switch(userChoice){
+            
+            case 0: System.out.println("A guardar e a sair.");
+                    return false;
+            
+            case 1: choice = ControlInput(2,clientMenu,input);
+                    switch(choice){
+                        
+                        case 1:addClient(c, input);
+                                holdEnterCont();
+                                break;
+                        case 2: listClient(c);
+                                holdEnterCont();
+                                break;
+                        default: break;
+                    }
+                    
+                    break;
+            case 2: choice = ControlInput(2,accountMenu,input);
+                    switch(choice){
+                        case 1: addAccount(input, c);
+                                
+                                break;
+                        case 2: choice = ControlInput(2,accountSubMenu,input);
+                                switch(choice){
+                                    case 0: return false;
+
+                                    case 1: 
+                                            break;
+                                        
+                                    case 2: 
+                                            break;
+                                    
+                                    default: break;
+                                }
+                    }
+                    break;
+                    
+            case 3: //choice = ControlInput(,,input);
+                    break;
+            
+            case 4: //choice = ControlInput(,,input);
+                    break;
+            
+            case 5: //choice = ControlInput(,,input);
+                    break;
+            
+            default: callMainMenu(input, c);
+        }
+        
+        
+        return true;
     }
     // Hugo Fim
 
@@ -152,7 +318,7 @@ public class Vos implements Serializable{
         aux1.addLog(c1);
         aux1.addLog(c2);
         aux2.addLog(c3); 
-     * @param args
+     
      */
     // Gusto fim
 
@@ -187,47 +353,18 @@ public class Vos implements Serializable{
                     ex2.printStackTrace();
         }
         
-        // Variaveis de Controlo de Menus para Parametros de funcoes
-        HandleMenus mainMenu = new MainMenu();
-        HandleMenus clientMenu = new ClientMenu();
         
         ArrayList<Client> ClientList = new ArrayList<Client>();
         
-        int userChoice = ControlInput(5,mainMenu,input); // 1a chamada ao Menu Principal
-        int choice = -1;
-        
-        switch(userChoice){
-            
-            case 0: System.out.println("A guardar e a sair.");
-                    break;
-            
-            case 1: choice = ControlInput(5,clientMenu,input);
-                    if(choice == 1)
-                        addClient(ClientList);
-                    
-                    break;
-            case 2: //choice = ControlInput(,,input);
-                    break;
-                    
-            case 3: //choice = ControlInput(,,input);
-                    break;
-            
-            case 4: //choice = ControlInput(,,input);
-                    break;
-            
-            case 5: //choice = ControlInput(,,input);
-                    break;
-            
-            default://choice == ControlInput(5,mainMenu,input);
-                    break;
+        boolean rerun = true;
+        while(rerun){
+            rerun = callMainMenu(input, ClientList);
         }
-        
         try{
             input.close();
         }catch(IOException ex){
             ex.printStackTrace();
         }
-        
     }
     
 }
