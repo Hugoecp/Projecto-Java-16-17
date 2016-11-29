@@ -1,6 +1,5 @@
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,11 +46,11 @@ public class Vos implements Serializable{
             System.out.println("**          Cliente                 **");
             System.out.println("**                                  **");
             System.out.println("**                                  **");
-            System.out.println("**  1) ????????                     **");
-            System.out.println("**  2) ??????????                   **");
-            System.out.println("**  3) ??????????                   **");
-            System.out.println("**  4) ??????????                   **");
-            System.out.println("**  5) ??????????                   **");
+            System.out.println("**  1) Adicionar Cliente            **");
+            System.out.println("**  2) Lista clientes               **");
+            System.out.println("**     existentes                   **");
+            System.out.println("**                                  **");
+            System.out.println("**                                  **");
             System.out.println("**                                  **");
             System.out.println("**                 0) Back          **");
             System.out.println("**                                  **");
@@ -94,6 +93,11 @@ public class Vos implements Serializable{
             System.out.println("O cliente: " + aux.getName() + " com o ID: " 
             + aux.getId());
         }
+    }
+    
+    public static void addClient(ArrayList<Client> c){
+        
+        
     }
     
     public static boolean setPriceList(double d,int x){
@@ -187,7 +191,7 @@ public class Vos implements Serializable{
         HandleMenus mainMenu = new MainMenu();
         HandleMenus clientMenu = new ClientMenu();
         
-        ArrayList<Client> ListClientes = new ArrayList<Client>();
+        ArrayList<Client> ClientList = new ArrayList<Client>();
         
         int userChoice = ControlInput(5,mainMenu,input); // 1a chamada ao Menu Principal
         int choice = -1;
@@ -198,6 +202,8 @@ public class Vos implements Serializable{
                     break;
             
             case 1: choice = ControlInput(5,clientMenu,input);
+                    if(choice == 1)
+                        addClient(ClientList);
                     
                     break;
             case 2: //choice = ControlInput(,,input);
