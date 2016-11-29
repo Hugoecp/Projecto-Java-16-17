@@ -1,15 +1,16 @@
 
+import java.io.FileInputStream;
 import java.io.Serializable;
 
 
 public class PriceList implements Serializable{
 
-    private static double C_Acall=0.12;
-    private static double C_Downloads=2.99;
-    private static double C_MMS=0.46;
-    private static double C_SMS=0.12;
-    private static double C_VMMS=0.456;
-    private static double C_Vcall=0.92;
+    private static double C_Acall;
+    private static double C_Downloads;
+    private static double C_MMS;
+    private static double C_SMS;
+    private static double C_VMMS;
+    private static double C_Vcall;
 
     public static double getC_Acall(){return C_Acall;}
     public static void setC_Acall(double C_Acall){PriceList.C_Acall = C_Acall;}
@@ -29,4 +30,5 @@ public class PriceList implements Serializable{
     
     public static double getC_Vcall(){return C_Vcall;}
     public static void setC_Vcall(double C_Vcall){PriceList.C_Vcall = C_Vcall;}
+
 }

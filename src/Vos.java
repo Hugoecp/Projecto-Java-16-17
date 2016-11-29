@@ -1,5 +1,7 @@
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -94,6 +96,25 @@ public class Vos implements Serializable{
         }
     }
     
+    public static boolean setPriceList(double d,int x){
+        
+        switch(x){
+            
+            case 0: PriceList.setC_Acall(d);
+                    return true;
+            case 1: PriceList.setC_Downloads(d);
+                    return true;
+            case 2: PriceList.setC_MMS(d);
+                    return true;
+            case 3: PriceList.setC_SMS(d);
+                    return true;
+            case 4: PriceList.setC_VMMS(d);
+                    return true;
+            case 5: PriceList.setC_Vcall(d);
+                    return false;
+            default: return false;
+        }
+    }
     // Hugo Fim
 
     // Tiago Inicio
@@ -131,9 +152,36 @@ public class Vos implements Serializable{
      */
     // Gusto fim
 
-    public static void main(String[] args) {
-     
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in)); 
+    
+    
+    public static void main(String[] args){
+        
+        BufferedReader input = new BufferedReader(
+                new InputStreamReader(System.in)); 
+        
+        // parte do codigo que corre sempre que o programa é executado para
+        // popular a lista dos precos.
+        String filename = "pricelist.txt";
+        double priceparser;
+        try{
+            BufferedReader file = new BufferedReader(new FileReader(filename));
+            try{
+                String line = null;
+                boolean rerun = true;
+                int i=0;
+                while (rerun){
+                    line = file.readLine();
+                    priceparser = Double.parseDouble(line);
+                    rerun =  setPriceList(priceparser,i);
+                    i++;
+                }
+                        
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }catch(IOException ex2){
+                    ex2.printStackTrace();
+        }
         
         // Variaveis de Controlo de Menus para Parametros de funcoes
         HandleMenus mainMenu = new MainMenu();
