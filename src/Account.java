@@ -6,7 +6,7 @@ public class Account implements Serializable{//conta
     
     // Class variavels
     
-    private static long ACCOUNT_ID = 0;
+    private static long ACCOUNT_ID = 330000;
     
     // Class Getters & Setters
     
