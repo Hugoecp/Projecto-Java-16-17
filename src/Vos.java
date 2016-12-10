@@ -137,7 +137,7 @@ public class Vos implements Serializable{
     public static void holdEnterCont(){ 
         System.out.print("");
         try{System.in.read();}  
-        catch(Exception e){}  
+        catch(IOException e){}  
  }
     
     public static void listClient(ArrayList<Client> c){
@@ -167,17 +167,15 @@ public class Vos implements Serializable{
         System.out.println("Escolha o cliente para o qual vai adicionar a conta:");
         listClient(c);
         System.out.println((c.size()+1) + ": adicionar novo cliente.");
-        holdEnterCont();
-        
         boolean rerun = true;
-        String option;
+        String option="";
         int userChoice = -1;
         int max = c.size() + 1;
         while(rerun){
             try{
                 option = input.readLine();
                 userChoice = Integer.parseInt(option);
-                if((userChoice < max) && (userChoice >= 1)){ //TODO Algo mto esquisito se passa nesta funcao.
+                if((userChoice <= max) && (userChoice >= 1)){
                     rerun = false;
             }else{
                 System.out.println("Opcao invalida. Apenas numeros de 1-"
