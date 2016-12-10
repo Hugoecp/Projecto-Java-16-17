@@ -1,8 +1,13 @@
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,6 +15,8 @@ public class Vos implements Serializable{
 
     // Hugo Inicio
        
+    
+    // MENUS
     public static class MainMenu implements HandleMenus{
         
         @Override
@@ -105,6 +112,8 @@ public class Vos implements Serializable{
         }
     }
     
+    // FIM MENUS
+    
     public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
         
         int userChoice = -1;
@@ -135,9 +144,9 @@ public class Vos implements Serializable{
     }
     
     public static void holdEnterCont(){ 
-        System.out.print("");
+        System.out.print(": ");
         try{System.in.read();}  
-        catch(IOException e){}  
+        catch(Exception e){}  
  }
     
     public static void listClient(ArrayList<Client> c){
@@ -164,40 +173,122 @@ public class Vos implements Serializable{
     
     public static void addAccount(BufferedReader input, ArrayList<Client> c){
         
-        System.out.println("Escolha o cliente para o qual vai adicionar a conta:");
-        listClient(c);
-        System.out.println((c.size()+1) + ": adicionar novo cliente.");
         boolean rerun = true;
-        String option="";
-        int userChoice = -1;
-        int max = c.size() + 1;
+        String option;
+        long cltid = -1;
+        
         while(rerun){
             try{
-                option = input.readLine();
-                userChoice = Integer.parseInt(option);
-                if((userChoice <= max) && (userChoice >= 1)){
-                    rerun = false;
-            }else{
-                System.out.println("Opcao invalida. Apenas numeros de 1-"
-                + max + ".");
-            }
-            }catch (IOException ex){
+                System.out.println("Insira o ID do cliente:");
+                cltid = Long.parseLong(input.readLine());
+                for(Client aux: c){
+                    if(aux.getId() == cltid){
+                        Account temp = new Account();
+                        aux.addAccount(temp.clone());
+                        System.out.println("Conta com o ID " + temp.getID() + 
+                                " criada no cliente " + aux.getName() + ".");
+                        holdEnterCont();
+                        return;
+                    }
+                }
+                System.out.println("O ID inserido não existe. " + 
+                        "Quer tentar novamente? (S/N)");
+                
+                boolean flag = true;
+                while(flag){
+                    option = input.readLine();
+                    switch (option) {
+                        case "S":
+                        case "s":
+                        case "Sim":
+                        case "sim":
+                            flag = false;
+                            break;
+                        case "N":
+                        case "n":
+                        case "Nao":
+                        case "nao":
+                            return;
+                        default:
+                            System.out.print("Erro! Opcões disponiveis: ");
+                            System.out.println("S; s; Sim; sim ou N; n; Nao; nao");
+                            break;
+                    }
+                }
+            }catch(IOException ex){
                 ex.printStackTrace();
             }catch(NumberFormatException ex2){
-                System.out.println("Opcao invalida. Apenas numeros de 1-"
-                    + max + ".");
+                System.out.println("ERRO! O ID do cliente é composto por numeros apenas.");
             }
         }
-        if(userChoice == max){
-            addClient(c,input);
-        }else{
-            long temp;
-            temp = c.get(userChoice-1).getId();
-            System.out.println("- " + temp +" -");
-        }
-        
     }
     
+    public static void ListAccByCltid(BufferedReader input, ArrayList<Client> c){
+        
+        boolean rerun = true;
+        long id = -1;
+        
+        while(rerun){
+            try{
+                System.out.println("Insira o ID do cliente:");
+                id = Long.parseLong(input.readLine());
+                for(Client temp : c){
+                    if(temp.getId() == id){
+                        if(temp.getAccs().isEmpty()){
+                            System.out.println("O cliente nao tem ainda contas criadas.");
+                            holdEnterCont();
+                            return;
+                        }else{
+                        System.out.println("O cliente " + temp.getName() + 
+                            " com o ID " + temp.getId() + 
+                            " tem as seguinte(s) conta(s):");
+                        for(Account aux : temp.getAccs()){
+                            System.out.println("A conta " + aux.getID() + " com " 
+                                + aux.getDevList().size() + " dispositivos");
+                        }         
+                        }
+                    }
+                }
+                    holdEnterCont();
+                    return;
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex2){
+                System.out.println("Erro! ID de cliente é composto por numeros!");
+            }
+        }
+    }
+    
+    public static void ManageAccountMenu(ArrayList<Client> c, BufferedReader input){
+     
+        HandleMenus accountMenu = new AccountMenu();
+        
+        int choice = ControlInput(2,accountMenu,input);
+        
+        switch(choice){
+            
+            case 0: break;
+            case 1:
+                    if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
+                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }
+                    addAccount(input, c);
+                    break;
+            case 2: if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
+                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }else{
+                        ListAccByCltid(input, c);
+                        break;
+                    }
+        }
+    }
+        
     public static boolean setPriceList(double d,int x){
         
         switch(x){
@@ -218,27 +309,42 @@ public class Vos implements Serializable{
         }
     }
     
-    public static boolean callMainMenu(BufferedReader input, ArrayList<Client> c){
+    public static boolean callMainMenu(String fx, BufferedReader input, ArrayList<Client> c){
         
         // Variaveis de Controlo de Menus para Parametros de funcoes
         
         HandleMenus mainMenu = new MainMenu();
         HandleMenus clientMenu = new ClientMenu();
-        HandleMenus accountMenu = new AccountMenu();
-        HandleMenus accountSubMenu = new AccountSubMenu();
+        
         
         int userChoice = ControlInput(5,mainMenu,input);
         int choice = -1;
         
+        
         switch(userChoice){
             
-            case 0: System.out.println("A guardar e a sair.");
+            case 0: try
+                    {
+                    FileOutputStream file = new FileOutputStream(fx);
+                    ObjectOutputStream out = new ObjectOutputStream(file);
+                    out.writeObject(c);
+                    out.flush();
+                    out.close();
+                    }catch(FileNotFoundException e){
+                        System.out.println("Nome do fx nao esta correcto!! "); 
+                    }catch(IOException e){
+                        e.printStackTrace();
+                        System.out.println("Problemas de I/O ..."); 
+                    }
+
+                
+                System.out.println("A guardar e a sair.");
                     return false;
             
             case 1: choice = ControlInput(2,clientMenu,input);
                     switch(choice){
                         
-                        case 1:addClient(c, input);
+                        case 1: addClient(c, input);
                                 holdEnterCont();
                                 break;
                         case 2: listClient(c);
@@ -248,24 +354,7 @@ public class Vos implements Serializable{
                     }
                     
                     break;
-            case 2: choice = ControlInput(2,accountMenu,input);
-                    switch(choice){
-                        case 1: addAccount(input, c);
-                                
-                                break;
-                        case 2: choice = ControlInput(2,accountSubMenu,input);
-                                switch(choice){
-                                    case 0: return false;
-
-                                    case 1: 
-                                            break;
-                                        
-                                    case 2: 
-                                            break;
-                                    
-                                    default: break;
-                                }
-                    }
+            case 2: ManageAccountMenu(c,input);
                     break;
                     
             case 3: //choice = ControlInput(,,input);
@@ -277,11 +366,31 @@ public class Vos implements Serializable{
             case 5: //choice = ControlInput(,,input);
                     break;
             
-            default: callMainMenu(input, c);
+            default: callMainMenu(fx, input, c);
         }
         
         
         return true;
+    }
+    
+    public static void readFromFile(String fname, BufferedReader input, ArrayList<Client> c){
+        try
+	{
+            FileInputStream f = new FileInputStream(fname);
+            ObjectInputStream in = new ObjectInputStream(f);
+            
+            for(Client aux : c){
+                aux = (Client)in.readObject();
+                c.add(aux);
+            }   
+            in.close();
+	}
+	catch(ClassNotFoundException e)
+	{ System.out.println("Classe do objecto lido nao existe !!"); }
+	catch(FileNotFoundException e)
+	{ System.out.println("Nome do fx nao esta correcto!! "); }
+	catch(IOException e)
+	{ System.out.println("Problemas de I/O ...");}
     }
     // Hugo Fim
 
@@ -291,33 +400,7 @@ public class Vos implements Serializable{
     // Tiago Fim
 
     // Gusto inicio
-    /**
-     Contact test1 = new Contact("Nome1", 911231231);
-        Contact test2 = new Contact("Nome2", 911231232);
-        Contact test3 = new Contact("Nome3", 911231233);
-        Contact test4 = new Contact("Nome4", 911231234);
-        Contact test5 = new Contact("Nome5", 911231235);
-        Contact test6 = new Contact("Nome6", 911231236);
-       
-        D_Phone aux1 = new D_Phone(929879877, "3G");
-        D_Tablet aux2 = new D_Tablet(914143078, "4G");
-        
-        aux1.addContact(test1);
-        aux1.addContact(test2);
-        aux1.addContact(test3);
-        aux1.addContact(test4);
-        aux2.addContact(test5);
-        aux2.addContact(test6);
-        
-        C_SMS c1 = new C_SMS(929879877,911231231,1,354,"teste1");
-        C_SMS c2 = new C_SMS(929879877,911231232,0,90,"teste2");
-        C_Downloads c3 = new C_Downloads(929879877,1,341343, 0.8);
-        
-        aux1.addLog(c1);
-        aux1.addLog(c2);
-        aux2.addLog(c3); 
-     
-     */
+    
     // Gusto fim
 
     
@@ -348,15 +431,15 @@ public class Vos implements Serializable{
                 ex.printStackTrace();
             }
         }catch(IOException ex2){
-                    ex2.printStackTrace();
+            ex2.printStackTrace();
         }
-        
-        
         ArrayList<Client> ClientList = new ArrayList<Client>();
+        String fname = "VosSave.txt";
+        readFromFile(fname, input,ClientList);
         
         boolean rerun = true;
         while(rerun){
-            rerun = callMainMenu(input, ClientList);
+            rerun = callMainMenu(fname, input, ClientList);
         }
         try{
             input.close();
