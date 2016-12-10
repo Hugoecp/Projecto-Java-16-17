@@ -1,11 +1,12 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Client {
+public class Client implements Serializable {
     
     //Class variavels
     
-    private static long CLT_ID = 0;//codigo unico de cad cliente
+    private static long CLT_ID = 999;//codigo unico de cad cliente
     
     public static long getCLT_ID(){return CLT_ID;}
     public static void setCLT_ID(long CLT_ID){Client.CLT_ID = CLT_ID;}
