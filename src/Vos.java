@@ -373,7 +373,7 @@ public class Vos implements Serializable{
         return true;
     }
     
-    public static void readFromFile(String fname, BufferedReader input, ArrayList<Client> c){
+    /** public static void readFromFile(String fname, BufferedReader input, ArrayList<Client> c){
         try
 	{
             FileInputStream f = new FileInputStream(fname);
@@ -391,11 +391,32 @@ public class Vos implements Serializable{
 	{ System.out.println("Nome do fx nao esta correcto!! "); }
 	catch(IOException e)
 	{ System.out.println("Problemas de I/O ...");}
-    }
+    } **/
     // Hugo Fim
 
     // Tiago Inicio
 
+    public static void readFromFile(String fname, BufferedReader input, ArrayList<Client> c){
+        try
+	{
+            FileInputStream f = new FileInputStream(fname);
+            ObjectInputStream in = new ObjectInputStream(f);
+            
+            c.addAll((ArrayList)in.readObject());
+            
+            /*for(Client aux : c){
+                aux = (Client)in.readObject();
+                c.add(aux);
+            }*/   
+            f.close();
+	}
+	catch(ClassNotFoundException e)
+	{ System.out.println("Classe do objecto lido nao existe !!"); }
+	catch(FileNotFoundException e)
+	{ System.out.println("Nome do fx nao esta correcto!! "); }
+	catch(IOException e)
+	{ System.out.println("Problemas de I/O ...");}
+    }
 
     // Tiago Fim
 
@@ -434,7 +455,7 @@ public class Vos implements Serializable{
             ex2.printStackTrace();
         }
         ArrayList<Client> ClientList = new ArrayList<Client>();
-        String fname = "VosSave.txt";
+        String fname = "VosSave.lib";
         readFromFile(fname, input,ClientList);
         
         boolean rerun = true;
