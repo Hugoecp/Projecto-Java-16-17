@@ -1,69 +1,20 @@
-import java.util.ArrayList;
 
 public class D_Tablet extends Device{
-    
-    private ArrayList<Contact> cList;
-    private ArrayList<Comunications> logs;
     
     public D_Tablet (long n, String nt){
         
         super(n, nt);
-        this.cList = super.getContact();
-        this.logs = super.getLogs();
         }
     
     public D_Tablet (D_Tablet t){
         
         super(t.getNumber(),t.getNetworkType());
-        this.cList = t.getCList();
-        this.logs = t.getLogs();
     }
     
-    public ArrayList<Contact> getCList()
-    {
-        ArrayList<Contact> temp = new ArrayList<Contact>();
-        for(Contact c : super.getContact())
-        {
-            temp.add(c.clone());
-        }        
-        return temp;
-    }
-    
-    public ArrayList<Comunications> getLogs()
-    {
-        ArrayList<Comunications> temp = new ArrayList<Comunications>();
-        for(Comunications c : super.getLogs())
-        {
-            temp.add(c.clone());
-        }
-        return temp;
-    }
-    
-    public boolean addContact(Contact x)
-    {
-        if(super.getContact().contains(x))
-            return false;
-        else
-        {
-            super.getContact().add(x);
-            return true;
-        }
-    }
-    
-    public boolean removeContact(Contact x)
-    {
-            if(super.getContact().contains(x))
-            {
-                super.getContact().remove(x);
-                return true;
-            }
-            else
-                return false;
-    }
     
     public void printRlogs(){
         
-        for(Comunications aux : super.getLogs()){
+        for(Comunications aux : super.getLogs().values()){
             if(aux.getControl() == 0)
                 System.out.println("Numero: " + aux.getOriginNumber() + 
                         " - " + aux.getClass().getName());
@@ -72,7 +23,7 @@ public class D_Tablet extends Device{
     
     public void printSlogs(){
         
-        for(Comunications aux : super.getLogs()){
+        for(Comunications aux : super.getLogs().values()){
             if(aux.getControl() == 1)
                 System.out.println("Numero: " + aux.getDestinyNumber() + 
                         " - " + aux.getClass().getName());

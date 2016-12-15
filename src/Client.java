@@ -1,6 +1,6 @@
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Client implements Serializable {
     
@@ -15,7 +15,7 @@ public class Client implements Serializable {
     
     private long id;//numero do cliente
     private String name;//nome do cliente
-    private ArrayList<Account> accs;//array com lista de conta
+    private HashMap<Long, Account> accs;//array com lista de conta
     
     // Construtors
     
@@ -23,7 +23,7 @@ public class Client implements Serializable {
         
         this.id = ++Client.CLT_ID;
         this.name = n;
-        this.accs = new ArrayList<Account>();
+        this.accs = new HashMap<Long,Account>();
     }
     
     // Clone Construtor
@@ -42,29 +42,30 @@ public class Client implements Serializable {
     public void setId(long i){this.id = i;}
     public String getName(){return name;}
     public void setName(String n){this.name = n;}
-    public ArrayList<Account> getAccs(){//get do array
+    public HashMap<Long,Account> getAccs(){//get do mapa
         
-        ArrayList<Account> temp = new ArrayList<Account>();
-        for(Account c : this.accs){
-            temp.add(c.clone());
-        }
+        HashMap<Long,Account> temp = new HashMap<Long,Account>();
+        temp.putAll(this.accs);
+        
         return temp;
     }
     
     // Methods
     
     public boolean addAccount(Account a){//metodo adicionar conta
-        
-        if(!this.accs.contains(a)){
-            this.accs.add(a.clone());
+        this.accs.put(a.getID(), a);
+        if(this.accs.containsKey(a.getID())){
             return true;
-        }
-        return false;
+        }else 
+            return false;
     }
+        
+        
+    
     public boolean removeAccount(Account a){//remover conta
         
-        if(this.accs.contains(a)){
-            this.accs.remove(a);
+        if(this.accs.containsKey(a.getID())){
+            this.accs.remove(a.getID(), a);
             return true;
         }
         return false;

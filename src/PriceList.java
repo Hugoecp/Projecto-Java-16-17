@@ -1,9 +1,7 @@
 
-import java.io.FileInputStream;
-import java.io.Serializable;
 
 
-public class PriceList implements Serializable{
+public class PriceList{
 
     private static double C_Acall;
     private static double C_Downloads;

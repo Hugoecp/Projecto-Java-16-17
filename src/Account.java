@@ -36,6 +36,7 @@ public class Account implements Serializable{//conta
     // Instance Getters & Setters
     
     public long getID(){return this.id;}
+    public void setId(Long id){Account.ACCOUNT_ID = id;}
     
     public ArrayList<Device> getDevList(){
         
@@ -91,6 +92,8 @@ public class Account implements Serializable{//conta
     public Account clone(){return new Account(this);}
     
     public boolean equals(Account a){return this.id == a.getID();}
+
+    
         
     
 }

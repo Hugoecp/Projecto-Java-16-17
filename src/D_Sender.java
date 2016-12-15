@@ -1,44 +1,19 @@
-import java.util.ArrayList;
 
 public class D_Sender extends Device{
-    
-    private ArrayList<Contact> cList;
-    private ArrayList<Comunications> logs;
     
     public D_Sender(long n, String nt){
         
         super(n,nt);
-        this.cList = super.getContact();
-        this.logs = super.getLogs();
     }
     
     public D_Sender(D_Sender ds){
         
         super(ds.getNumber(), ds.getNetworkType());
-        this.cList = ds.getContact();
-        this.logs = ds.getLogs();
     }
     
-    public boolean addContact(Contact x){
-        
-        if(super.getContact().contains(x)){
-            return false;
-        }else{
-            super.getContact().add(x.clone());
-        }
-        return true;
-    }
-    public boolean removeContact(Contact y){
-        
-        if(super.getContact().contains(y)){
-            super.getContact().remove(y);
-            return true;
-        }
-        return false;
-    } 
     public void printRlogs(){
 
-         for(Comunications aux : super.getLogs()){
+         for(Comunications aux : super.getLogs().values()){
              if(aux.getControl() == 0)
                  System.out.println("Numero: " + aux.getOriginNumber() + 
                          " - " + aux.getClass().getName());
@@ -46,7 +21,7 @@ public class D_Sender extends Device{
      }
     public void printSlogs(){
         
-        for(Comunications aux : super.getLogs()){
+        for(Comunications aux : super.getLogs().values()){
             if(aux.getControl() == 1)
                 System.out.println("Numero: " + aux.getDestinyNumber() + 
                         " - " + aux.getClass().getName());
