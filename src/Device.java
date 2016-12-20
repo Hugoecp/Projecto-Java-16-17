@@ -69,7 +69,8 @@ public abstract class Device implements Serializable{
         return false;
     }
     
-    public void addLog(Comunications c){this.Logs.put(c.getDestinyNumber(), c);}
+    public void addLog(Comunications c)
+    {this.Logs.put(c.getDestinyNumber(), c.clone());}
     
     
     public abstract void printRlogs();

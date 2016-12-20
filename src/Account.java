@@ -57,7 +57,6 @@ public class Account implements Serializable{//conta
         }
         return true;
     }
-    
     public boolean removeDevice(Device d){
         
         if(this.DeviceList.contains(d)){
@@ -66,7 +65,6 @@ public class Account implements Serializable{//conta
         }
         return false;
     } 
-    
     public long getAccIDbyDevNum(long num){
         
         for(Device aux : this.DeviceList){
@@ -75,6 +73,22 @@ public class Account implements Serializable{//conta
             }
         }
         return 0;
+    }
+    public boolean checkNum(long num){
+        for(Device d : this.DeviceList){
+            if(d.getNumber() == num)
+                return true;
+        }
+        return false;
+    }
+    public String getTypeByNum(long n){
+        
+        for(Device d : this.DeviceList){
+            if(d.getNumber() == n){
+                return d.getClass().getName();
+            }
+        }
+            return "Erro. Dispositivo nao existe";
     }
     public ArrayList<Device> getDevListbyID(long num){
         
@@ -87,10 +101,7 @@ public class Account implements Serializable{//conta
         }
         return null;
     }
-    
-    @Override
     public Account clone(){return new Account(this);}
-    
     public boolean equals(Account a){return this.id == a.getID();}
 
     

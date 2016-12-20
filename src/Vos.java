@@ -10,9 +10,7 @@ import java.io.ObjectInputStream;
 
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeSet;
 
 public class Vos implements Serializable{
 
@@ -140,6 +138,28 @@ public class Vos implements Serializable{
         }
     }
     
+    public static class DeviceTypeMenu implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("Que tipo de dispositivo quer adicionar?");
+            System.out.println("1: Sender");
+            System.out.println("2: Telemovel");
+            System.out.println("3: Tablet");
+        }
+    }
+    
+    public static class NetworkTypeMenu implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("Qual a capacidade de rede do dispositivo");
+            System.out.println("1: 2G");
+            System.out.println("2: 3G");
+            System.out.println("3: 4G");
+        }
+    }
+    
     // FIM MENUS
     
     public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
@@ -165,6 +185,35 @@ public class Vos implements Serializable{
                 ex.printStackTrace();
             }catch(NumberFormatException ex2){
                 System.out.println("Opcao invalida. Apenas numeros de 0-"
+                    + max + ".");
+            }
+        }
+        return userChoice;
+    }
+    
+    public static int ControlInputNoBackButton(int max, HandleMenus menu, BufferedReader input){
+        
+        int userChoice = -1;
+        String cliReader;
+        boolean rerun = true; 
+        
+        if(menu !=null)
+            menu.printMenu();
+        
+        while(rerun){
+            try{
+                cliReader = input.readLine();
+                userChoice = Integer.parseInt(cliReader);
+                if(userChoice <= max && userChoice >= 0){
+                    rerun = false;
+            }else{
+                System.out.println("Opcao invalida. Apenas numeros de 1-"
+                + max + ".");
+            }
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex2){
+                System.out.println("Opcao invalida. Apenas numeros de 1-"
                     + max + ".");
             }
         }
@@ -263,28 +312,50 @@ public class Vos implements Serializable{
     
     public static void addDevice(BufferedReader input, HashMap<Long,Client> c){
         
+        HandleMenus netMenu = new NetworkTypeMenu();
+        HandleMenus DevMenu = new DeviceTypeMenu();
+        
+        
+        
         long num = 0;
-        Device d = null;
         String rede = null, option = null;
-        HashMap<Long,Comunications> temp = new HashMap<Long,Comunications>();
-        TreeSet<Contact> aux = new TreeSet<Contact>();
         boolean rerun = true;
         try{
             while(rerun){
-                System.out.println("Insira o numero do dispositivo:");
+                System.out.println("Insira o numero para o dispositivo:");
                 System.out.print(": ");
                 num = Long.parseLong(input.readLine());
                 for(Long i : c.keySet()){
-                    
+                   for(Client x : c.values())
+                       for(Account y : x.getAccs().values()){
+                           if(y.checkNum(num))
+                               System.out.println("Numero " + num + " ja existe. É do tipo " + y.getTypeByNum(num));
+                           else{
+                               int choice = ControlInputNoBackButton(3, DevMenu, input);
+                               switch(choice){
+                                    case 1: rede = "2G";
+                                            Device d = new D_Sender(num,rede);
+                                            y.addDevice(d);
+                                            rerun = false;
+                                            break;
+                                    case 2: 
+                                            break;
+                                    case 3: rede = "4G";
+                                            break;
+                                    default:System.out.println("Erro!!!");
+                                            break;
+                               }
+                           }
+                       }
                 }
-               }
+            }
         }catch(IOException ex){
             ex.printStackTrace();
         }catch(NumberFormatException ex2){
                 System.out.println("ERRO. apenas numeros.");
             }
     }
-    
+        
     public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
         
         boolean rerun = true;
@@ -360,8 +431,7 @@ public class Vos implements Serializable{
                 
                 case 0: break;
                 case 1: if(c.isEmpty()){
-                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
-                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
+                        System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
                         holdEnterCont();
                         break;
                     }
@@ -417,26 +487,23 @@ public class Vos implements Serializable{
                         }
                     }    
                     }
-                                        
                     try
                     {
-                    FileOutputStream file = new FileOutputStream(fx);
-                    ObjectOutputStream out = new ObjectOutputStream(file);
-                    out.writeObject(c);
-                    out.writeLong(cltid);
-                    out.writeLong(accid);
-                    out.flush();
-                    out.close();
-                    }catch(FileNotFoundException e){
-                        System.out.println("Nome do fx nao esta correcto!! "); 
-                    }catch(IOException e){
-                        e.printStackTrace();
-                        System.out.println("Problemas de I/O ..."); 
-                    }
-
-                
-                System.out.println("A guardar e a sair.");
-                    return false;
+                        FileOutputStream file = new FileOutputStream(fx);
+                        ObjectOutputStream out = new ObjectOutputStream(file);
+                        out.writeObject(c);
+                        out.writeLong(cltid);
+                        out.writeLong(accid);
+                        out.flush();
+                        out.close();
+                        }catch(FileNotFoundException e){
+                            System.out.println("Nome do fx nao esta correcto!! "); 
+                        }catch(IOException e){
+                            e.printStackTrace();
+                            System.out.println("Problemas de I/O ..."); 
+                        }
+                        System.out.println("A guardar e a sair.");
+                        return false;
             
             case 1: choice = ControlInput(2,clientMenu,input);
                     switch(choice){
@@ -470,26 +537,34 @@ public class Vos implements Serializable{
         return true;
     }
     
-    public static void readFromFile(String fname, BufferedReader input, HashMap<Long,Client> c){
+    public static HashMap<Long,Client> readFromFile(String fname){
+        HashMap<Long,Client> temp= null;
         try
 	{
-            ArrayList<Client> temp= null;
-            long getid;
-            long getid2;
             FileInputStream f = new FileInputStream(fname);
             ObjectInputStream in = new ObjectInputStream(f);
-            temp = (ArrayList<Client>)in.readObject();
-            getid = in.readLong();
-            getid2 = in.readLong();
+            temp = (HashMap<Long,Client>)in.readObject();
+            if(temp.isEmpty() && temp == null){
+                System.out.println("Warning: Ficheiro inexistente ou vazio!");
+            }
+            long getid = in.readLong();
+            if(getid != 0){
+            Client aux = new Client("setid");
+            aux.setId(getid);
+            }
+            long getid2 = in.readLong();
+            Account aux2 = new Account();
+            aux2.setId(getid2);
             in.close();
             f.close();
-	}
-	catch(ClassNotFoundException e)
+	}catch(ClassNotFoundException e)
 	{ System.out.println("Classe do objecto lido nao existe !!"); }
 	catch(FileNotFoundException e)
 	{ System.out.println("Nome do fx nao esta correcto!! "); }
 	catch(IOException e)
 	{ System.out.println("Problemas de I/O ...");}
+        
+        return temp;
     }
     // Hugo Fim
 
@@ -552,11 +627,13 @@ public class Vos implements Serializable{
         }catch(IOException ex2){
             ex2.printStackTrace();
         }
-        //ArrayList<Client> ClientList = new ArrayList<Client>();
-        HashMap<Long, Client> ClientList = new HashMap<Long, Client>();
-        String fname = "VosSave.ser";
-        //readFromFile(fname, input,ClientList);
         
+        String fname = "VosSave.ser";
+        //HashMap<Long, Client> ClientList = new HashMap<Long, Client>();
+        HashMap<Long, Client> ClientList = readFromFile(fname);
+        if(ClientList.isEmpty()){
+            System.out.println("ups something wrong");
+        }
         boolean rerun = true;
         while(rerun){
             rerun = callMainMenu(fname, input, ClientList);

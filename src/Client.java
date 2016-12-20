@@ -59,9 +59,6 @@ public class Client implements Serializable {
         }else 
             return false;
     }
-        
-        
-    
     public boolean removeAccount(Account a){//remover conta
         
         if(this.accs.containsKey(a.getID())){
@@ -70,14 +67,11 @@ public class Client implements Serializable {
         }
         return false;
     }
-        
     public boolean equals(Client e){return e.id == this.id;}//metodo equals
-
     public String toString() {
         return ("Client{" + "id=" + id + ", name=" + 
                 name + ", accs=" + accs + '}');
     }
-    @Override
     public Client clone(){return new Client(this);}
 
   }
