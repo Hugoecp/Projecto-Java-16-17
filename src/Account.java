@@ -74,6 +74,7 @@ public class Account implements Serializable{//conta
         }
         return 0;
     }
+    
     public boolean checkNum(long num){
         for(Device d : this.DeviceList){
             if(d.getNumber() == num)
@@ -85,7 +86,13 @@ public class Account implements Serializable{//conta
         
         for(Device d : this.DeviceList){
             if(d.getNumber() == n){
-                return d.getClass().getName();
+                if(d.getClass().getName().equals("D_Sender"))
+                    return "Sender";
+                if(d.getClass().getName().equals("D_Phone"))
+                    return "Telemovel";
+                if(d.getClass().getName().equals("D_Tablet"))
+                    return "Tablet";
+                
             }
         }
             return "Erro. Dispositivo nao existe";

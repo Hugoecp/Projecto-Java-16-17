@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Vos implements Serializable{
@@ -312,19 +313,17 @@ public class Vos implements Serializable{
     
     public static void addDevice(BufferedReader input, HashMap<Long,Client> c){
         
-        HandleMenus netMenu = new NetworkTypeMenu();
         HandleMenus DevMenu = new DeviceTypeMenu();
         
-        
-        
         long num = 0;
-        String rede = null, option = null;
+        String rede = " ";
         boolean rerun = true;
         try{
             while(rerun){
-                System.out.println("Insira o numero para o dispositivo:");
+                System.out.println("Insira o numero para o dispositivo (0 cancela):");
                 System.out.print(": ");
                 num = Long.parseLong(input.readLine());
+                if(num == 0) return;
                 for(Long i : c.keySet()){
                    for(Client x : c.values())
                        for(Account y : x.getAccs().values()){
@@ -334,13 +333,25 @@ public class Vos implements Serializable{
                                int choice = ControlInputNoBackButton(3, DevMenu, input);
                                switch(choice){
                                     case 1: rede = "2G";
-                                            Device d = new D_Sender(num,rede);
-                                            y.addDevice(d);
+                                            Device s = new D_Sender(num,rede);
+                                            y.addDevice(s);
+                                            System.out.println("Sender adicionado.");
                                             rerun = false;
+                                            holdEnterCont();
                                             break;
-                                    case 2: 
+                                    case 2: rede = networkCap(input);
+                                            Device p = new D_Phone(num, rede);
+                                            y.addDevice(p);
+                                            System.out.println("Telemovel adicionado.");
+                                            rerun = false;
+                                            holdEnterCont();
                                             break;
-                                    case 3: rede = "4G";
+                                    case 3: rede = networkCap(input);
+                                            Device t = new D_Tablet(num, rede);
+                                            y.addDevice(t);
+                                            System.out.println("Tablet adicionada.5");
+                                            rerun = false;
+                                            holdEnterCont();
                                             break;
                                     default:System.out.println("Erro!!!");
                                             break;
@@ -355,7 +366,62 @@ public class Vos implements Serializable{
                 System.out.println("ERRO. apenas numeros.");
             }
     }
+    
+    public static String networkCap(BufferedReader input){
         
+        HandleMenus netMenu = new NetworkTypeMenu();
+        
+        int choice = ControlInput(3, netMenu,input);
+        switch(choice){
+            case 0: return "2G";
+            case 1: return "3G";
+            case 2: return "4G";
+            default: return "Erro!";
+        }
+        
+    }
+    
+    public static void listAccDevs(BufferedReader input, HashMap<Long,Client> c){
+        
+        ArrayList<Device> temp = new ArrayList<Device>();
+        
+        System.out.println("Introduza o numero da conta:");
+        System.out.println(": ");
+        try{
+            long choice = Long.parseLong(input.readLine());
+            for(Long i : c.keySet()){
+                Client x = c.get(i);
+                for(Long j : x.getAccs().keySet()){
+                    Account y = x.getAccs().get(j);
+                    if(y.getID() == choice){
+                        temp.addAll(y.getDevList());
+                        System.out.println("A conta " + choice + " associada ao cliente " + x.getName() +  " tem os seguintes dispositivos:");
+                        int aux=0;
+                        for(Device d : temp){
+                            if(d.getClass().getName().equals("D_Sender"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Sender.");
+                            if(d.getClass().getName().equals("D_Phone"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Telemovel.");
+                            if(d.getClass().getName().equals("D_Tablet"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Tablet.");
+                        }
+                        holdEnterCont();
+                    }
+                    else
+                        System.out.println("O id " + choice + " não existe.");
+                }
+        }
+            
+        }catch(IOException ex){
+            
+        }catch(NumberFormatException ex2){
+            System.out.println("Erro!! Apenas Numeros!!!");
+        }
+        
+        
+        
+    }
+    
     public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
         
         boolean rerun = true;
@@ -431,13 +497,19 @@ public class Vos implements Serializable{
                 
                 case 0: break;
                 case 1: if(c.isEmpty()){
-                        System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
-                        holdEnterCont();
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        addDevice(input, c);
                         break;
-                    }
-                    addDevice(input, c);
-                    break;
-                case 2:
+                case 2: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        listAccDevs(input,c);
+                        
             }
     }
         
@@ -544,7 +616,7 @@ public class Vos implements Serializable{
             FileInputStream f = new FileInputStream(fname);
             ObjectInputStream in = new ObjectInputStream(f);
             temp = (HashMap<Long,Client>)in.readObject();
-            if(temp.isEmpty() && temp == null){
+            if(temp.isEmpty()){
                 System.out.println("Warning: Ficheiro inexistente ou vazio!");
             }
             long getid = in.readLong();
@@ -561,8 +633,7 @@ public class Vos implements Serializable{
 	{ System.out.println("Classe do objecto lido nao existe !!"); }
 	catch(FileNotFoundException e)
 	{ System.out.println("Nome do fx nao esta correcto!! "); }
-	catch(IOException e)
-	{ System.out.println("Problemas de I/O ...");}
+	catch(IOException e){}
         
         return temp;
     }
@@ -592,6 +663,7 @@ public class Vos implements Serializable{
 	catch(IOException e)
 	{ System.out.println("Problemas de I/O ...");}
     }
+     * @param args
     **/
     // Tiago Fim
 
@@ -631,8 +703,9 @@ public class Vos implements Serializable{
         String fname = "VosSave.ser";
         //HashMap<Long, Client> ClientList = new HashMap<Long, Client>();
         HashMap<Long, Client> ClientList = readFromFile(fname);
-        if(ClientList.isEmpty()){
-            System.out.println("ups something wrong");
+        if(ClientList == null){
+            System.out.println("Lista de clientes vazia. A criar uma nova!!");
+            ClientList = new HashMap<Long, Client>();
         }
         boolean rerun = true;
         while(rerun){
