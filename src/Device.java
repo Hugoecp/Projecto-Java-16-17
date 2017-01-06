@@ -1,8 +1,9 @@
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 //classe dispositivo
-public abstract class Device implements Serializable{
+public abstract class Device implements Serializable, Comparator<Contact>{
     
     // Class variavels
     
@@ -60,7 +61,6 @@ public abstract class Device implements Serializable{
     
     // Methods    
     public void addContact(Contact x){this.cList.add(x);}
-    
     public boolean removeContact(Contact y){
         if(this.cList.contains(y)){
             this.cList.remove(y);
@@ -68,11 +68,7 @@ public abstract class Device implements Serializable{
         }
         return false;
     }
-    
-    public void addLog(Comunications c)
-    {this.Logs.put(c.getDestinyNumber(), c.clone());}
-    
-    
+    public void addLog(Comunications c){this.Logs.put(c.getDestinyNumber(), c.clone());}
     public abstract void printRlogs();
     public abstract void printSlogs();
     public abstract Device clone();

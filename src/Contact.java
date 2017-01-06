@@ -1,7 +1,8 @@
 
 import java.io.Serializable;
+import java.util.Comparator;
 
-public class Contact implements Serializable{
+public class Contact implements Comparator<Contact>, Serializable{
     
     private String name;//nome do contacto
     private long number;//numero do contacto
@@ -31,11 +32,15 @@ public class Contact implements Serializable{
     public long getNumber(){return this.number;}
     public void setNumber(long number){this.number = number;}
     
+    
     // Methdos
     public String toString() {
         return "Contact{" + "name=" + name + ", number=" + number + '}';
     }
-   
+    
+    public int compare(Contact c1, Contact c2){
+        return c1.getName().compareTo(c2.getName());
+    }
     public boolean equals(Contact c){
         
         if(c.equals(this.getName()) && c.number == this.getNumber())
@@ -47,4 +52,6 @@ public class Contact implements Serializable{
     public Contact clone(){
        return new Contact(this);
     }
+
+    
 }

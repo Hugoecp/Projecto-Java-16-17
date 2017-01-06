@@ -154,7 +154,7 @@ public class Vos implements Serializable{
         
         public void printMenu(){
             
-            System.out.println("Qual a capacidade de rede do dispositivo");
+            System.out.println("Qual o tipo de rede do dispositivo");
             System.out.println("1: 2G");
             System.out.println("2: 3G");
             System.out.println("3: 4G");
@@ -227,14 +227,6 @@ public class Vos implements Serializable{
         catch(Exception e){}  
  }
     
-    public static void listClient(HashMap<Long,Client> c){
-        int index=0;
-        for(Long id : c.keySet()){
-            System.out.println(++index + ": O cliente: " 
-                    + c.get(id).getName() + " com o ID: " + id);
-        }
-    }
-    
     public static void addClient(HashMap<Long, Client> c, BufferedReader input){
         
         boolean rerun = true;
@@ -258,6 +250,14 @@ public class Vos implements Serializable{
         Client temp = new Client(nome);
         c.put(temp.getId(), temp);
         System.out.println("Cliente " + nome + " com o ID " + temp.getId() + " criado.");
+    }
+    
+    public static void listClient(HashMap<Long,Client> c){
+        int index=0;
+        for(Long id : c.keySet()){
+            System.out.println(++index + ": O cliente: " 
+                    + c.get(id).getName() + " com o ID: " + id);
+        }
     }
     
     public static void addAccount(BufferedReader input, HashMap<Long,Client> c){
@@ -386,7 +386,7 @@ public class Vos implements Serializable{
         ArrayList<Device> temp = new ArrayList<Device>();
         
         System.out.println("Introduza o numero da conta:");
-        System.out.println(": ");
+        System.out.print(": ");
         try{
             long choice = Long.parseLong(input.readLine());
             for(Long i : c.keySet()){
@@ -405,12 +405,13 @@ public class Vos implements Serializable{
                             if(d.getClass().getName().equals("D_Tablet"))
                                 System.out.println(++aux + ": " + d.getNumber() + " do tipo Tablet.");
                         }
-                        holdEnterCont();
                     }
-                    else
+                    else{
                         System.out.println("O id " + choice + " não existe.");
+                    }
                 }
         }
+        holdEnterCont();
             
         }catch(IOException ex){
             
@@ -422,6 +423,86 @@ public class Vos implements Serializable{
         
     }
     
+    public static void listDevNetByType(BufferedReader input, HashMap<Long, Client> c){
+     
+        HandleMenus netType = new NetworkTypeMenu();
+        String network = "";
+        int cont = 0, emptylist = 0;
+        int choice = ControlInputNoBackButton(3,netType,input);
+        switch(choice){
+            case 1: network = "2G";
+                    break;
+            case 2: network = "3G";
+                    break;
+            case 3: network = "4G";
+                    break;
+        }
+        for(Long i : c.keySet()){
+            Client temp = c.get(i);
+            for(Long j : temp.getAccs().keySet()){
+                Account aux = temp.getAccs().get(j);
+                for(Device d : aux.getDevList()){
+                    if(d.getNetworkType().equals(network)){
+                        System.out.println(++cont + ": Dispositivo com o numero "
+                        + d.getNumber() + " do tipo " + d.getClass().getSimpleName());
+                        ++emptylist;
+                    }
+                }
+            }
+        }
+        holdEnterCont();
+        if(emptylist == 0)
+            System.out.println("Não existem dispositivos com esse tipo de rede.");
+    }
+    
+    public static void addContact2Dev(BufferedReader input, HashMap<Long, Client> c){
+        
+        System.out.println("Introduza o numero do dispositivo a adicionar o contacto:");
+        boolean rerun = true;
+        boolean flag = false;
+        while(rerun){
+            
+            System.out.print(": ");
+            try{
+                long num = Long.parseLong(input.readLine());
+                for(Long i : c.keySet())
+                    for(Client x : c.values())
+                        for(Long j : x.getAccs().keySet()){
+                            Account y = x.getAccs().get(j);
+                                for(Device d : y.getDevList()){
+                                    if(num == d.getNumber()){
+                                        System.out.println("Insira o nome: ");
+                                        System.out.print(": ");
+                                        String name = input.readLine();
+                                        System.out.println("Insira o numero: ");
+                                        try{
+                                            System.out.print(": ");
+                                            long n = Long.parseLong(input.readLine());
+                                            Contact ct = new Contact(name,n);
+                                            d.addContact(ct);
+                                            System.out.println("Contacto adicionado.");
+                                            holdEnterCont();
+                                        }catch(NumberFormatException e){
+                                            System.out.println("Erro! Apenas numeros!");
+                                        }
+                                        rerun = false;
+                                        flag = true;
+                                    }
+                                }
+                            }
+                if(flag != true){
+                    System.out.println("O numero introduzido não existe.");
+                    rerun = false;
+                    holdEnterCont();
+                }
+                        
+            }catch(IOException e){
+            }catch(NumberFormatException e){
+            System.out.println("Erro! Apenas numeros!");
+            }
+        }
+    }
+        
     public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
         
         boolean rerun = true;
@@ -501,7 +582,7 @@ public class Vos implements Serializable{
                             holdEnterCont();
                             break;
                         }
-                        addDevice(input, c);
+                        addDevice(input,c);
                         break;
                 case 2: if(c.isEmpty()){
                             System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
@@ -509,6 +590,21 @@ public class Vos implements Serializable{
                             break;
                         }
                         listAccDevs(input,c);
+                        break;
+                case 3: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        listDevNetByType(input,c);
+                        break;
+                case 4: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        addContact2Dev(input,c);
+                        break;
                         
             }
     }
@@ -548,16 +644,15 @@ public class Vos implements Serializable{
         switch(userChoice){
             
             case 0: long cltid = 0, accid = 0;
-                    int i = c.size()-1;
-                    for(Client aux : c.values()){
-                        if(cltid < aux.getId()){
-                            cltid = aux.getId();
+                    for(Long i : c.keySet()){
+                        Client aux = c.get(i);
+                        if(cltid < i)
+                            cltid = i;
+                        for(Long y : aux.getAccs().keySet()){
+                            Account temp = aux.getAccs().get(y);
+                            if(accid < temp.getID())
+                                accid = temp.getID();
                         }
-                    for(Account temp : c.get(aux.getId()).getAccs().values()){
-                        if(accid < temp.getID()){
-                            accid = temp.getID();
-                        }
-                    }    
                     }
                     try
                     {
