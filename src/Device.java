@@ -22,7 +22,11 @@ public abstract class Device implements Serializable, Comparator<Contact>{
         this.number = n;
         this.networkType = nt;
         this.Logs = new HashMap<Long,Comunications>();
-        this.cList = new TreeSet<Contact>();
+        this.cList = new TreeSet<Contact>(new Comparator<Contact>() {
+            public int compare(Contact c1, Contact c2){
+            return (c1.getName().compareTo(c2.getName()));
+    }
+        });
     }
     
     // Clone Construtor
@@ -60,7 +64,8 @@ public abstract class Device implements Serializable, Comparator<Contact>{
     }
     
     // Methods    
-    public void addContact(Contact x){this.cList.add(x);}
+    public void addContact(Contact x){this.cList.add(x.clone());}
+    
     public boolean removeContact(Contact y){
         if(this.cList.contains(y)){
             this.cList.remove(y);

@@ -1,8 +1,7 @@
 
 import java.io.Serializable;
-import java.util.Comparator;
 
-public class Contact implements Comparator<Contact>, Serializable{
+public class Contact implements Serializable{
     
     private String name;//nome do contacto
     private long number;//numero do contacto

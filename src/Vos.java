@@ -457,50 +457,20 @@ public class Vos implements Serializable{
     
     public static void addContact2Dev(BufferedReader input, HashMap<Long, Client> c){
         
-        System.out.println("Introduza o numero do dispositivo a adicionar o contacto:");
-        boolean rerun = true;
-        boolean flag = false;
-        while(rerun){
+        System.out.println("Cliente a quem adicionar o contacto:");
+        System.out.print(": ");
+        
+        try{
+            long cltid = Long.parseLong(input.readLine());
             
-            System.out.print(": ");
-            try{
-                long num = Long.parseLong(input.readLine());
-                for(Long i : c.keySet())
-                    for(Client x : c.values())
-                        for(Long j : x.getAccs().keySet()){
-                            Account y = x.getAccs().get(j);
-                                for(Device d : y.getDevList()){
-                                    if(num == d.getNumber()){
-                                        System.out.println("Insira o nome: ");
-                                        System.out.print(": ");
-                                        String name = input.readLine();
-                                        System.out.println("Insira o numero: ");
-                                        try{
-                                            System.out.print(": ");
-                                            long n = Long.parseLong(input.readLine());
-                                            Contact ct = new Contact(name,n);
-                                            d.addContact(ct);
-                                            System.out.println("Contacto adicionado.");
-                                            holdEnterCont();
-                                        }catch(NumberFormatException e){
-                                            System.out.println("Erro! Apenas numeros!");
-                                        }
-                                        rerun = false;
-                                        flag = true;
-                                    }
-                                }
-                            }
-                if(flag != true){
-                    System.out.println("O numero introduzido não existe.");
-                    rerun = false;
-                    holdEnterCont();
-                }
-                        
-            }catch(IOException e){
-            }catch(NumberFormatException e){
-            System.out.println("Erro! Apenas numeros!");
-            }
+            
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }catch(NumberFormatException ex){
+            System.out.println("Erro! so numeros!!");
         }
+
+        
     }
         
     public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
