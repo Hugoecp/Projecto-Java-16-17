@@ -459,17 +459,25 @@ public class Vos implements Serializable{
         
         System.out.println("Cliente a quem adicionar o contacto:");
         System.out.print(": ");
+        long cltid = 0;
+        boolean rerun = true;
         
-        try{
-            long cltid = Long.parseLong(input.readLine());
-            
-            
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }catch(NumberFormatException ex){
-            System.out.println("Erro! so numeros!!");
+        while(rerun){
+            try{
+                cltid = Long.parseLong(input.readLine());
+                if(c.containsKey(cltid)){
+                    rerun = false;
+                }else{
+                    System.out.println("Esse cliente não existe! Tente novamente.");
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro! so numeros!!");
+            }
         }
-
+        
+        
         
     }
         
