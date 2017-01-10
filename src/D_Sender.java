@@ -1,5 +1,8 @@
 
-public class D_Sender extends Device{
+import java.io.Serializable;
+
+
+public class D_Sender extends Device implements Serializable{
     
     public D_Sender(long n, String nt){
         
@@ -46,4 +49,7 @@ public class D_Sender extends Device{
             return true;
         return false;
     }
+
+    public int compare(Contact c1, Contact c2){
+        return (c1.getName().compareTo(c2.getName()));}
 }

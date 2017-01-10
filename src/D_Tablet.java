@@ -1,5 +1,8 @@
 
-public class D_Tablet extends Device{
+import java.io.Serializable;
+
+
+public class D_Tablet extends Device implements Serializable{
     
     public D_Tablet (long n, String nt){
         
@@ -39,4 +42,6 @@ public class D_Tablet extends Device{
     }
     
     public D_Tablet clone(){return new D_Tablet(this);}
+    public int compare(Contact c1, Contact c2){
+        return (c1.getName().compareTo(c2.getName()));}
 }

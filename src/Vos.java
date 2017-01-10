@@ -15,10 +15,9 @@ import java.util.HashMap;
 
 public class Vos implements Serializable{
 
-    // Hugo Inicio
-       
     
     // MENUS
+    
     public static class MainMenu implements HandleMenus{
         
         @Override
@@ -311,55 +310,108 @@ public class Vos implements Serializable{
         }
     }
     
-    public static void addDevice(BufferedReader input, HashMap<Long,Client> c){
+    public static void addDeviceByNumber(BufferedReader input, HashMap<Long,Client> c){
         
         HandleMenus DevMenu = new DeviceTypeMenu();
         
-        long num = 0;
-        String rede = " ";
-        boolean rerun = true;
+        long num = 0, cltid = 0, accid = 0;
+        String rede = " ", option = " ";
+        boolean rerun = true, flag = false;
+        
+        
+        try{
+            System.out.println("Insira o numero do cliente:");
+            System.out.print(": ");
+            option = input.readLine();
+            if(option.startsWith("1") && !option.isEmpty() 
+                    && option.length() >= 4){
+                num = Long.parseLong(option);
+                if(c.containsKey(num)){
+                    cltid = num;
+                }
+            }else{
+                System.out.println("Esse cliente não existe!");
+                holdEnterCont();
+                return;
+            }
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }catch(NumberFormatException ex){
+            System.out.println("Erro! Só números de 0-9!");
+        }
+        
+        try{
+            System.out.println("Insira o numero da conta:");
+            System.out.print(": ");
+            option = input.readLine();
+            if(option.startsWith("33") && !option.isEmpty() 
+                    && option.length() >= 6 ){
+                num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client aux = c.get(i);
+                        for(Long j : aux.getAccs().keySet()){
+                            if(num == j){
+                                accid = num;    
+                            }
+                        }
+                    }
+                }else{
+                System.out.println("Essa conta não existe!");
+                holdEnterCont();
+                return;
+            }
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }catch(NumberFormatException ex){
+            System.out.println("Erro! Só números de 0-9!");
+        }
+                
         try{
             while(rerun){
-                System.out.println("Insira o numero para o dispositivo (0 cancela):");
+                System.out.println("Insira o numero para o dispositivo:");
                 System.out.print(": ");
-                num = Long.parseLong(input.readLine());
-                if(num == 0) return;
-                for(Long i : c.keySet()){
-                   for(Client x : c.values())
-                       for(Account y : x.getAccs().values()){
-                           if(y.checkNum(num))
-                               System.out.println("Numero " + num + " ja existe. É do tipo " + y.getTypeByNum(num));
-                           else{
-                               int choice = ControlInputNoBackButton(3, DevMenu, input);
-                               switch(choice){
-                                    case 1: rede = "2G";
-                                            Device s = new D_Sender(num,rede);
-                                            y.addDevice(s);
-                                            System.out.println("Sender adicionado.");
-                                            rerun = false;
-                                            holdEnterCont();
-                                            break;
-                                    case 2: rede = networkCap(input);
-                                            Device p = new D_Phone(num, rede);
-                                            y.addDevice(p);
-                                            System.out.println("Telemovel adicionado.");
-                                            rerun = false;
-                                            holdEnterCont();
-                                            break;
-                                    case 3: rede = networkCap(input);
-                                            Device t = new D_Tablet(num, rede);
-                                            y.addDevice(t);
-                                            System.out.println("Tablet adicionada.5");
-                                            rerun = false;
-                                            holdEnterCont();
-                                            break;
-                                    default:System.out.println("Erro!!!");
-                                            break;
-                               }
-                           }
-                       }
+                option = input.readLine();
+                if(!option.isEmpty() && (option.startsWith("91")
+                        || option.startsWith("92")
+                        || option.startsWith("93")
+                        || option.startsWith("96")) 
+                        && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Device d : c.get(cltid).getAccs().get(accid).getDevList()){
+                        if(d.getNumber() == num){
+                            System.out.println("Numero " + num + " ja existe. "
+                                    + "É do tipo " + 
+                                    c.get(cltid).getAccs().get(accid).getTypeByNum(num));
+                            return;
+                        }
+                    }
+                    int choice = ControlInputNoBackButton(3, DevMenu, input);
+                    switch(choice){
+                         case 1: rede = "2G";
+                                 Device s = new D_Sender(num,rede);
+                                 c.get(cltid).getAccs().get(accid).addDevice(s);
+                                 System.out.println("Sender adicionado.");
+                                 holdEnterCont();
+                                 return;
+                         case 2: rede = networkCap(input);
+                                 Device p = new D_Phone(num, rede);
+                                 c.get(cltid).getAccs().get(accid).addDevice(p);
+                                 System.out.println("Telemovel adicionado.");
+                                 holdEnterCont();
+                                 return;
+                         case 3: rede = networkCap(input);
+                                 Device t = new D_Tablet(num, rede);
+                                 c.get(cltid).getAccs().get(accid).addDevice(t);
+                                 System.out.println("Tablet adicionada.");
+                                 holdEnterCont();
+                                 return;
+                         default:System.out.println("Erro!!!");
+                                 break;
+                    }
+
                 }
             }
+            
         }catch(IOException ex){
             ex.printStackTrace();
         }catch(NumberFormatException ex2){
@@ -457,28 +509,85 @@ public class Vos implements Serializable{
     
     public static void addContact2Dev(BufferedReader input, HashMap<Long, Client> c){
         
-        System.out.println("Cliente a quem adicionar o contacto:");
+        System.out.println("Numero do dispositivo onde adicionar o contacto:");
         System.out.print(": ");
+        int y = -1;
+        long num = 0;
         long cltid = 0;
+        long accid = 0;
+        boolean flag = false;
         boolean rerun = true;
+        String name = "";
+        
         
         while(rerun){
             try{
-                cltid = Long.parseLong(input.readLine());
-                if(c.containsKey(cltid)){
-                    rerun = false;
-                }else{
-                    System.out.println("Esse cliente não existe! Tente novamente.");
+                num = Long.parseLong(input.readLine());
+                
+                for(Long i : c.keySet()){
+                    Client aux = c.get(i);
+                    for(Long j : aux.getAccs().keySet()){
+                        Account aux2 = aux.getAccs().get(j);
+                        for(Device d : aux2.getDevList()){
+                            if(d.getNumber() == num){
+                                flag = true;
+                                cltid = i;
+                                accid = j;
+                                
+                                rerun = false;
+                            }
+                        }
+                    }
                 }
-            }catch(IOException ex){
+                }catch(IOException ex){
                 ex.printStackTrace();
-            }catch(NumberFormatException ex){
+                }catch(NumberFormatException ex){
                 System.out.println("Erro! so numeros!!");
+                }
+            if(flag){
+                rerun = true;
+                System.out.println("Insira o nome do contacto:");
+
+                try{
+                    System.out.print(": ");
+                    name = input.readLine();
+
+                }catch(IOException ex){
+                    ex.printStackTrace();
+                }
+                while(rerun){
+                    try{
+                        System.out.println("Insira o numero do contacto:");
+                        System.out.print(": ");
+                        String number = input.readLine();
+                        if(!number.isEmpty() &&
+                                (number.startsWith("91") ||
+                                number.startsWith("96") ||
+                                number.startsWith("93") ||
+                                number.startsWith("92") || 
+                                number.startsWith("253")) &&
+                                number.length() == 9 ){
+                            num = Long.parseLong(number);
+                            rerun = false;
+                        }else{
+                            System.out.println("Formato errado");
+                        }
+                    }catch(IOException ex){
+                        ex.printStackTrace();
+                    }catch(NumberFormatException ex){
+                        System.out.println("Erro! Só números de 0-9!");
+                    }
+                }  
+                Contact x = new Contact(name,num);
+
+                for(Device d: c.get(cltid).getAccs().get(accid).getDevList()){
+                    d.addContact(x);
+                }      
             }
-        }
-        
-        
-        
+            else{
+                System.out.println("Esse dispositivo não existe!");
+            }
+        } 
     }
         
     public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
@@ -560,7 +669,7 @@ public class Vos implements Serializable{
                             holdEnterCont();
                             break;
                         }
-                        addDevice(input,c);
+                        addDeviceByNumber(input,c);
                         break;
                 case 2: if(c.isEmpty()){
                             System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
@@ -621,7 +730,7 @@ public class Vos implements Serializable{
         
         switch(userChoice){
             
-            case 0: long cltid = 0, accid = 0;
+            case 0: long cltid = 999, accid = 330000;
                     for(Long i : c.keySet()){
                         Client aux = c.get(i);
                         if(cltid < i)
@@ -710,39 +819,6 @@ public class Vos implements Serializable{
         
         return temp;
     }
-    // Hugo Fim
-
-    // Tiago Inicio 
-    /**
-    
-    public static void readFromFile(String fname, BufferedReader input, ArrayList<Client> c){
-        try
-	{
-            FileInputStream f = new FileInputStream(fname);
-            ObjectInputStream in = new ObjectInputStream(f);
-            
-            c.addAll((ArrayList)in.readObject());
-            
-            /*for(Client aux : c){
-                aux = (Client)in.readObject();
-                c.add(aux);
-            }  
-            f.close();
-	}
-	catch(ClassNotFoundException e)
-	{ System.out.println("Classe do objecto lido nao existe !!"); }
-	catch(FileNotFoundException e)
-	{ System.out.println("Nome do fx nao esta correcto!! "); }
-	catch(IOException e)
-	{ System.out.println("Problemas de I/O ...");}
-    }
-     * @param args
-    **/
-    // Tiago Fim
-
-    // Gusto inicio
-    
-    // Gusto fim
     
     public static void main(String[] args){
         
