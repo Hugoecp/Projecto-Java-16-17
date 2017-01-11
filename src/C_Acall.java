@@ -16,6 +16,7 @@ public class C_Acall extends Comunications{
     
     public double getDuration(){return this.duration;}
     public void setDuration(double d){this.duration = d;}
+    public String getComType(){return "Chamada Audio";}
     
     public double comCost(){        
         return (this.duration/60) * PriceList.getC_Acall();

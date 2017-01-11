@@ -27,6 +27,7 @@ public class C_VMMS extends Comunications implements Byteable{
     public void setFormat(String format){this.format = format;}
     public double getDuration(){return duration;}
     public void setDuration(double duration) {this.duration = duration;}
+    public String getComType(){return "Mensagem de video";}
     
     public double transmitRate(){
         

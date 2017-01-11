@@ -926,9 +926,15 @@ public class Vos implements Serializable{
                     }
                     createComs(input, c);
                     break;
-            case 2: listDevComs(input, c);
+            case 2: if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. ");
+                        System.out.println("Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }
+                    listDevComs(input, c);
                     break;
-            case 3:
+            case 3: CrossReferenceDevs(input,c);
                     break;
             case 4: 
                     break;
@@ -1058,7 +1064,6 @@ public class Vos implements Serializable{
         if(!Dflag){
             System.out.println("O numero " + Dnum + " não existe!");
             holdEnterCont();
-            return;
         }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
@@ -1068,8 +1073,8 @@ public class Vos implements Serializable{
             }
             for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
                 if(d.getNumber() == Dnum){
-                    Comunications temp = new C_Acall(Dnum,Onum,1,Math.random());
-                    d.addLog(temp);
+                    Comunications temp2 = new C_Acall(Dnum,Onum,1,Math.random());
+                    d.addLog(temp2);
                 }
             }
             System.out.println("Registo de chamada de voz criado.");
@@ -1629,7 +1634,113 @@ public class Vos implements Serializable{
                 }
         System.out.println("Não existe nenhuma comunicação desse tipo no número "
                 + num);
-    }   
+    }  
+    
+    public static void CrossReferenceDevs(BufferedReader input, HashMap<Long, Client> c){
+        
+        String option = " ";
+        long num1 = 0, cltid1 = 0, accid1 = 0;
+        long num2 = 0, cltid2 = 0, accid2 = 0;
+        boolean rerun = true, flag1 = false, flag2 = false;
+        while(rerun){
+            try{
+                System.out.println("Primeiro número:");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num1 = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account aux = temp.getAccs().get(j);
+                            for(Device d : aux.getDevList()){
+                                if(num1 == d.getNumber()){
+                                    cltid1 = i;
+                                    accid1 = j;
+                                    rerun = false;
+                                    flag1 = true;
+                                }
+                            }
+                        }
+                    }
+                }                    
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Formato composto por 9 números!");
+                holdEnterCont();
+                return;
+            }
+        }
+        if(!flag1){
+            System.out.println("Erro. O número " + num1 + " não existe.");
+            holdEnterCont();
+            return;
+        }
+        rerun = true;
+        while(rerun){
+            try{
+                System.out.println("Segundo número:");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num2 = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account aux = temp.getAccs().get(j);
+                            for(Device d : aux.getDevList()){
+                                if(num1 == d.getNumber()){
+                                    cltid2 = i;
+                                    accid2 = j;
+                                    rerun = false;
+                                    flag2 = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. O número " + num1 + " não existe.");
+                holdEnterCont();
+                return;
+            }
+        }
+        if(!flag2){
+            System.out.println("Erro. O número " + num2 + " não existe.");
+            holdEnterCont();
+        }else{
+            ArrayList<Comunications> matchcoms = new ArrayList<Comunications>();
+            ArrayList<Comunications> matchcoms2 = new ArrayList<Comunications>();
+            
+            for(Device d : c.get(cltid1).getAccs().get(accid1).getDevList()){
+                for(Comunications temp : d.getLogs()){
+                    for(Device d2 : c.get(cltid2).getAccs().get(accid2).getDevList()){
+                        for(Comunications temp2 : d2.getLogs()){
+                            if(temp.getDestinyNumber() == temp2.getOriginNumber()){
+                                matchcoms.add(temp);
+                                matchcoms2.add(temp2);
+                            }
+                        }
+                    }
+                }
+            }
+            System.out.println("Lista do numero " + num1 + ":");
+            int k = 0, p = 0;
+            for(Comunications aux : matchcoms){
+                System.out.println(++k + ": Numero " + aux.getDestinyNumber() +
+                        "com comunicacao do tipo " + aux.getComType());
+            }
+            System.out.println("");
+            System.out.println("");
+            System.out.println("Lista do numero " + num2 + ":");
+            for(Comunications aux : matchcoms2){
+                System.out.println(++p + ": Numero " + aux.getDestinyNumber() +
+                        "com comunicacao do tipo " + aux.getComType());
+            }
+        }
+        
+    }
     
     // Main
     

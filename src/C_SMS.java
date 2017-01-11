@@ -22,6 +22,7 @@ public class C_SMS extends Comunications{
     public void setSmsSize(double s){this.smsSize = s;}
     public String getSmsBody(){return smsBody;}
     public void setSmsBody(String s){this.smsBody = s;}
+    public String getComType(){return "Mensagem de texto";}
 
 
     public double comCost(){return PriceList.getC_SMS();}

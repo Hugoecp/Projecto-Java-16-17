@@ -27,6 +27,7 @@ public class C_MMS extends Comunications{
     public void setFormat(String f){this.format = f;}
     public String getRes(){return this.res;}
     public void setRes(String r){this.res = r;}
+    public String getComType(){return "Mensagem de imagem";}
     
     public double comCost(){return PriceList.getC_MMS();}
     

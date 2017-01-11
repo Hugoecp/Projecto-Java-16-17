@@ -21,6 +21,7 @@ public class C_Downloads extends Comunications implements Byteable{
     public void setSize(double size){this.size = size;}
     public double getDuration(){return this.duration;}
     public void setDuration(double duration){this.duration = duration;}
+    public String getComType(){return "Descarga";}
     
     public double transmitRate(){return this.size/(this.duration/60);}
     

@@ -26,7 +26,7 @@ public abstract class Comunications implements Serializable {
     public long getDestinyNumber(){return this.destinyNumber;}
     public void setDestinyNumber(long n){this.destinyNumber = n;}
     public int getControl(){return this.control;}
-    
+    public abstract String getComType();
     public abstract double comCost();
     public abstract boolean equals(Comunications c);
     public abstract Comunications clone();

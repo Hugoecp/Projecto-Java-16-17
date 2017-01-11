@@ -22,6 +22,7 @@ public class C_Vcall extends Comunications implements Byteable{
     public void setDuration(double d){this.duration = d;}
     public String getRes(){return this.res;}
     public void setRed(String r){this.res = r;}
+    public String getComType(){return "Chamada de video";}
     
     public double transmitRate(){
         
