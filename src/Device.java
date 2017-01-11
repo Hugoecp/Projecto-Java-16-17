@@ -1,6 +1,6 @@
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.TreeSet;
 //classe dispositivo
 public abstract class Device implements Serializable, Comparator<Contact>{
@@ -13,7 +13,7 @@ public abstract class Device implements Serializable, Comparator<Contact>{
     
     private long number;//numero do dispositivo
     private String networkType;//tipo de rede
-    private HashMap<Long,Comunications> Logs;//registo de comunicações(recebido e enviados)
+    private ArrayList<Comunications> Logs;//registo de comunicações(recebido e enviados)
     private TreeSet<Contact> cList;//lista de contactos
     // Construtors
     
@@ -21,7 +21,7 @@ public abstract class Device implements Serializable, Comparator<Contact>{
         
         this.number = n;
         this.networkType = nt;
-        this.Logs = new HashMap<Long,Comunications>();
+        this.Logs = new ArrayList<Comunications>();
         this.cList = new TreeSet<Contact>(new TreeOrder());
     }
     
@@ -43,10 +43,12 @@ public abstract class Device implements Serializable, Comparator<Contact>{
     public String getNetworkType(){return this.networkType;}
     public void setNetworkType(String networkType){
         this.networkType = networkType;}
-    public HashMap<Long,Comunications> getLogs(){
+    public ArrayList<Comunications> getLogs(){
         
-        HashMap<Long,Comunications> temp = new HashMap<Long, Comunications>();
-        temp.putAll(this.Logs);
+        ArrayList<Comunications> temp = new ArrayList<Comunications>();
+        for(Comunications c : this.Logs){
+            temp.add(c);
+        }
         return temp;
     }
     public TreeSet<Contact> getContacts(){
@@ -69,7 +71,7 @@ public abstract class Device implements Serializable, Comparator<Contact>{
         }
         return false;
     }
-    public void addLog(Comunications c){this.Logs.put(c.getDestinyNumber(), c.clone());}
+    public void addLog(Comunications c){this.Logs.add(c);}
     public abstract void printRlogs();
     public abstract void printSlogs();
     public abstract Device clone();

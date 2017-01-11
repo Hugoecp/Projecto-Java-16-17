@@ -16,7 +16,7 @@ public class D_Sender extends Device implements Serializable{
     
     public void printRlogs(){
 
-         for(Comunications aux : super.getLogs().values()){
+         for(Comunications aux : super.getLogs()){
              if(aux.getControl() == 0)
                  System.out.println("Numero: " + aux.getOriginNumber() + 
                          " - " + aux.getClass().getName());
@@ -24,7 +24,7 @@ public class D_Sender extends Device implements Serializable{
      }
     public void printSlogs(){
         
-        for(Comunications aux : super.getLogs().values()){
+        for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 1)
                 System.out.println("Numero: " + aux.getDestinyNumber() + 
                         " - " + aux.getClass().getName());

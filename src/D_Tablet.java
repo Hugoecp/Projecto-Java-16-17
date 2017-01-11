@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 public class D_Tablet extends Device implements Serializable{
     
-    public D_Tablet (long n, String nt){
+    private int capacity = 0;
+    
+    public D_Tablet (long n, String nt, int c){
         
         super(n, nt);
+        this.capacity = c;
         }
     
     public D_Tablet (D_Tablet t){
@@ -14,10 +17,11 @@ public class D_Tablet extends Device implements Serializable{
         super(t.getNumber(),t.getNetworkType());
     }
     
+    public int getCap(){return this.capacity;}
     
     public void printRlogs(){
         
-        for(Comunications aux : super.getLogs().values()){
+        for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 0)
                 System.out.println("Numero: " + aux.getOriginNumber() + 
                         " - " + aux.getClass().getName());
@@ -26,7 +30,7 @@ public class D_Tablet extends Device implements Serializable{
     
     public void printSlogs(){
         
-        for(Comunications aux : super.getLogs().values()){
+        for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 1)
                 System.out.println("Numero: " + aux.getDestinyNumber() + 
                         " - " + aux.getClass().getName());

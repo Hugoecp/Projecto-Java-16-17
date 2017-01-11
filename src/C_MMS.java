@@ -1,11 +1,11 @@
 public class C_MMS extends Comunications{
     
   
-    private long size;//duração
+    private double size;//duração
     private String format;//formato de imagem
     private String res;//resolução
     
-    public C_MMS(long on, long dn, int c, long s, String f, String r){
+    public C_MMS(long on, long dn, int c, double s, String f, String r){
         
         super(on,dn,c);//numero de dispositivo e o destino
         this.size = s;
@@ -21,7 +21,7 @@ public class C_MMS extends Comunications{
         this.res = c.getRes();
     }
 
-    public long getSize(){return this.size;}
+    public double getSize(){return this.size;}
     public void setSize(long s){this.size = s;}
     public String getFormat(){return this.format;}
     public void setFormat(String f){this.format = f;}
