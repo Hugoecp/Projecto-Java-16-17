@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 public class Vos implements Serializable{
 
-    
     // MENUS
     
     public static class MainMenu implements HandleMenus{
@@ -160,7 +159,45 @@ public class Vos implements Serializable{
         }
     }
     
-    // FIM MENUS
+    public static class ComsMenu implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+            System.out.println("**                                  **");
+            System.out.println("**           Comunicações           **");
+            System.out.println("**                                  **");
+            System.out.println("**  1) Criar comunicações entre     **");
+            System.out.println("**     dois dispositivos.           **");
+            System.out.println("**  2) Listar comunicações          **");
+            System.out.println("**     recebidas de um dispositivo  **");
+            System.out.println("**  3) Cruzar informação de         **");
+            System.out.println("**     dois números.                **");
+            System.out.println("**  4) Listar as comunicações       **");
+            System.out.println("**     de dados.                    **");
+            System.out.println("**                                  **");
+            System.out.println("**                 0) Back          **");
+            System.out.println("**                                  **");
+            System.out.println("**************************************");
+            System.out.println("**************************************");
+        }
+    }
+    
+    public static class TypeOfComs implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("Qual o tipo de comunicação a criar:");
+            System.out.println("1: Chamada audio.");
+            System.out.println("2: Chamada video.");
+            System.out.println("3: Mensagem de texto.");
+            System.out.println("4: Mensagem Multimedia");
+            System.out.println("5: Dados");
+        }
+    }
+    
+    // Metodos de controlo
     
     public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
         
@@ -220,11 +257,135 @@ public class Vos implements Serializable{
         return userChoice;
     }
     
+    public static boolean callMainMenu(String fx, BufferedReader input, HashMap<Long,Client> c){
+        
+        // Variaveis de Controlo de Menus para Parametros de funcoes
+        
+        HandleMenus mainMenu = new MainMenu();
+        HandleMenus clientMenu = new ClientMenu();
+        
+        
+        int userChoice = ControlInput(5,mainMenu,input);
+        int choice = -1;
+        
+        
+        switch(userChoice){
+            
+            case 0: long cltid = 999, accid = 330000;
+                    for(Long i : c.keySet()){
+                        Client aux = c.get(i);
+                        if(cltid < i)
+                            cltid = i;
+                        for(Long y : aux.getAccs().keySet()){
+                            Account temp = aux.getAccs().get(y);
+                            if(accid < temp.getID())
+                                accid = temp.getID();
+                        }
+                    }
+                    try
+                    {
+                        FileOutputStream file = new FileOutputStream(fx);
+                        ObjectOutputStream out = new ObjectOutputStream(file);
+                        out.writeObject(c);
+                        out.writeLong(cltid);
+                        out.writeLong(accid);
+                        out.flush();
+                        out.close();
+                        }catch(FileNotFoundException e){
+                            System.out.println("Nome do fx nao esta correcto!! "); 
+                        }catch(IOException e){
+                            e.printStackTrace();
+                            System.out.println("Problemas de I/O ..."); 
+                        }
+                        System.out.println("A guardar e a sair.");
+                        return false;
+            
+            case 1: choice = ControlInput(2,clientMenu,input);
+                    switch(choice){
+                        
+                        case 1: addClient(c, input);
+                                holdEnterCont();
+                                break;
+                        case 2: listClient(c);
+                                holdEnterCont();
+                                break;
+                        default: break;
+                    }
+                    
+                    break;
+            case 2: ManageAccountMenu(input,c);
+                    break;
+                    
+            case 3: ManageDeviceMenu(input,c);
+                    break;
+            
+            case 4: ManageComsMenu(input,c);
+                    break;
+            
+            case 5: //choice = ControlInput(,,input);
+                    break;
+            
+            default: callMainMenu(fx, input, c);
+        }
+        
+        
+        return true;
+    }
+    
     public static void holdEnterCont(){ 
         System.out.print(": ");
         try{System.in.read();}  
         catch(Exception e){}  
  }
+    
+    // Metodos de leitura externa
+    
+    public static HashMap<Long,Client> readFromFile(String fname){
+        HashMap<Long,Client> temp= null;
+        try
+	{
+            FileInputStream f = new FileInputStream(fname);
+            ObjectInputStream in = new ObjectInputStream(f);
+            temp = (HashMap<Long,Client>)in.readObject();
+            if(temp.isEmpty()){
+                System.out.println("Warning: Ficheiro inexistente ou vazio!");
+            }
+            long getid = in.readLong();
+            long getid2 = in.readLong();
+            Client.setCLT_ID(getid);
+            Account.setACC_ID(getid2);
+            in.close();
+            f.close();
+	}catch(ClassNotFoundException e)
+	{ System.out.println("Classe do objecto lido nao existe !!"); }
+	catch(FileNotFoundException e)
+	{ System.out.println("Nome do fx nao esta correcto!! "); }
+	catch(IOException e){}
+        
+        return temp;
+    }
+    
+    public static boolean setPriceList(double d,int x){
+        
+        switch(x){
+            
+            case 0: PriceList.setC_Acall(d);
+                    return true;
+            case 1: PriceList.setC_Downloads(d);
+                    return true;
+            case 2: PriceList.setC_MMS(d);
+                    return true;
+            case 3: PriceList.setC_SMS(d);
+                    return true;
+            case 4: PriceList.setC_VMMS(d);
+                    return true;
+            case 5: PriceList.setC_Vcall(d);
+                    return false;
+            default: return false;
+        }
+    }
+    
+    // Metodos de gestao de Clientes
     
     public static void addClient(HashMap<Long, Client> c, BufferedReader input){
         
@@ -256,6 +417,38 @@ public class Vos implements Serializable{
         for(Long id : c.keySet()){
             System.out.println(++index + ": O cliente: " 
                     + c.get(id).getName() + " com o ID: " + id);
+        }
+    }
+    
+    // Metodos de gestao de contas
+    
+    public static void ManageAccountMenu(BufferedReader input, HashMap<Long,Client> c){
+     
+        HandleMenus accountMenu = new AccountMenu();
+        
+        int choice = ControlInput(2,accountMenu,input);
+        
+        switch(choice){
+            
+            case 0: break;
+            case 1:
+                    if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
+                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }
+                    addAccount(input, c);
+                    break;
+            case 2: if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
+                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }else{
+                        ListAccByCltid(input, c);
+                        break;
+                    }
         }
     }
     
@@ -310,6 +503,126 @@ public class Vos implements Serializable{
         }
     }
     
+    public static void listAccDevs(BufferedReader input, HashMap<Long,Client> c){
+        
+        ArrayList<Device> temp = new ArrayList<Device>();
+        
+        System.out.println("Introduza o numero da conta:");
+        System.out.print(": ");
+        try{
+            long choice = Long.parseLong(input.readLine());
+            for(Long i : c.keySet()){
+                Client x = c.get(i);
+                for(Long j : x.getAccs().keySet()){
+                    Account y = x.getAccs().get(j);
+                    if(y.getID() == choice){
+                        temp.addAll(y.getDevList());
+                        System.out.println("A conta " + choice + " associada ao cliente " + x.getName() +  " tem os seguintes dispositivos:");
+                        int aux=0;
+                        for(Device d : temp){
+                            if(d.getClass().getName().equals("D_Sender"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Sender.");
+                            if(d.getClass().getName().equals("D_Phone"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Telemovel.");
+                            if(d.getClass().getName().equals("D_Tablet"))
+                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Tablet.");
+                        }
+                    }
+                    else{
+                        System.out.println("O id " + choice + " não existe.");
+                    }
+                }
+        }
+        holdEnterCont();
+            
+        }catch(IOException ex){
+            
+        }catch(NumberFormatException ex2){
+            System.out.println("Erro!! Apenas Numeros!!!");
+        }
+        
+        
+        
+    }
+    
+    public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
+        
+        boolean rerun = true;
+        long id = -1;
+        
+        while(rerun){
+            try{
+                System.out.println("Insira o ID do cliente:");
+                id = Long.parseLong(input.readLine());
+                if(c.containsKey(id)){
+                    if(c.get(id).getAccs().isEmpty()){
+                        System.out.println("O cliente nao tem ainda contas criadas.");
+                        holdEnterCont();
+                        return;
+                    }else{
+                        System.out.println("O cliente " + c.get(id).getName() + 
+                            " com o ID " + id + " tem as seguinte(s) conta(s):");
+                        for(Account aux : c.get(id).getAccs().values()){
+                            System.out.println("A conta " + aux.getID() + " com " 
+                                + aux.getDevList().size() + " dispositivos");
+                        }        
+                    }
+                }else
+                    System.out.println("Esse ID não existe.");
+                
+                    holdEnterCont();
+                    return;
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex2){
+                System.out.println("Erro! ID de cliente é composto por numeros!");
+            }
+        }
+    }
+    
+    // Metodos de gestao de dispositivos
+ 
+    public static void ManageDeviceMenu(BufferedReader input,HashMap<Long,Client> c) {
+     
+            HandleMenus deviceMenu = new DeviceMenu();
+            
+            int choice = ControlInput(4,deviceMenu,input);
+            
+            switch(choice){
+                
+                case 0: break;
+                case 1: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        addDeviceByNumber(input,c);
+                        break;
+                case 2: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        listAccDevs(input,c);
+                        break;
+                case 3: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        listDevNetByType(input,c);
+                        break;
+                case 4: if(c.isEmpty()){
+                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
+                            holdEnterCont();
+                            break;
+                        }
+                        addContact2Dev(input,c);
+                        break;
+                        
+            }
+    }
+ 
     public static void addDeviceByNumber(BufferedReader input, HashMap<Long,Client> c){
         
         HandleMenus DevMenu = new DeviceTypeMenu();
@@ -418,7 +731,7 @@ public class Vos implements Serializable{
                 System.out.println("ERRO. apenas numeros.");
             }
     }
-    
+ 
     public static String networkCap(BufferedReader input){
         
         HandleMenus netMenu = new NetworkTypeMenu();
@@ -432,49 +745,7 @@ public class Vos implements Serializable{
         }
         
     }
-    
-    public static void listAccDevs(BufferedReader input, HashMap<Long,Client> c){
-        
-        ArrayList<Device> temp = new ArrayList<Device>();
-        
-        System.out.println("Introduza o numero da conta:");
-        System.out.print(": ");
-        try{
-            long choice = Long.parseLong(input.readLine());
-            for(Long i : c.keySet()){
-                Client x = c.get(i);
-                for(Long j : x.getAccs().keySet()){
-                    Account y = x.getAccs().get(j);
-                    if(y.getID() == choice){
-                        temp.addAll(y.getDevList());
-                        System.out.println("A conta " + choice + " associada ao cliente " + x.getName() +  " tem os seguintes dispositivos:");
-                        int aux=0;
-                        for(Device d : temp){
-                            if(d.getClass().getName().equals("D_Sender"))
-                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Sender.");
-                            if(d.getClass().getName().equals("D_Phone"))
-                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Telemovel.");
-                            if(d.getClass().getName().equals("D_Tablet"))
-                                System.out.println(++aux + ": " + d.getNumber() + " do tipo Tablet.");
-                        }
-                    }
-                    else{
-                        System.out.println("O id " + choice + " não existe.");
-                    }
-                }
-        }
-        holdEnterCont();
-            
-        }catch(IOException ex){
-            
-        }catch(NumberFormatException ex2){
-            System.out.println("Erro!! Apenas Numeros!!!");
-        }
-        
-        
-        
-    }
-    
+ 
     public static void listDevNetByType(BufferedReader input, HashMap<Long, Client> c){
      
         HandleMenus netType = new NetworkTypeMenu();
@@ -506,15 +777,14 @@ public class Vos implements Serializable{
         if(emptylist == 0)
             System.out.println("Não existem dispositivos com esse tipo de rede.");
     }
-    
+ 
     public static void addContact2Dev(BufferedReader input, HashMap<Long, Client> c){
         
         System.out.println("Numero do dispositivo onde adicionar o contacto:");
         System.out.print(": ");
         int y = -1;
         long num = 0;
-        long cltid = 0;
-        long accid = 0;
+        long cltid = 0, accid = 0, num2 = 0;
         boolean flag = false;
         boolean rerun = true;
         String name = "";
@@ -533,7 +803,7 @@ public class Vos implements Serializable{
                                 flag = true;
                                 cltid = i;
                                 accid = j;
-                                
+                                num2 = num;
                                 rerun = false;
                             }
                         }
@@ -560,13 +830,7 @@ public class Vos implements Serializable{
                         System.out.println("Insira o numero do contacto:");
                         System.out.print(": ");
                         String number = input.readLine();
-                        if(!number.isEmpty() &&
-                                (number.startsWith("91") ||
-                                number.startsWith("96") ||
-                                number.startsWith("93") ||
-                                number.startsWith("92") || 
-                                number.startsWith("253")) &&
-                                number.length() == 9 ){
+                        if(!number.isEmpty() && number.length() == 9 ){
                             num = Long.parseLong(number);
                             rerun = false;
                         }else{
@@ -581,244 +845,344 @@ public class Vos implements Serializable{
                 Contact x = new Contact(name,num);
 
                 for(Device d: c.get(cltid).getAccs().get(accid).getDevList()){
-                    d.addContact(x);
+                    if(d.getNumber() == num2)
+                        d.addContact(x);
                 }      
             }
             else{
                 System.out.println("Esse dispositivo não existe!");
+                holdEnterCont();
             }
         } 
     }
-        
-    public static void ListAccByCltid(BufferedReader input, HashMap<Long,Client> c){
-        
-        boolean rerun = true;
-        long id = -1;
-        
-        while(rerun){
-            try{
-                System.out.println("Insira o ID do cliente:");
-                id = Long.parseLong(input.readLine());
-                if(c.containsKey(id)){
-                    if(c.get(id).getAccs().isEmpty()){
-                        System.out.println("O cliente nao tem ainda contas criadas.");
-                        holdEnterCont();
-                        return;
-                    }else{
-                        System.out.println("O cliente " + c.get(id).getName() + 
-                            " com o ID " + id + " tem as seguinte(s) conta(s):");
-                        for(Account aux : c.get(id).getAccs().values()){
-                            System.out.println("A conta " + aux.getID() + " com " 
-                                + aux.getDevList().size() + " dispositivos");
-                        }        
-                    }
-                }else
-                    System.out.println("Esse ID não existe.");
-                
-                    holdEnterCont();
-                    return;
-            }catch(IOException ex){
-                ex.printStackTrace();
-            }catch(NumberFormatException ex2){
-                System.out.println("Erro! ID de cliente é composto por numeros!");
-            }
-        }
-    }
     
-    public static void ManageAccountMenu(BufferedReader input, HashMap<Long,Client> c){
-     
-        HandleMenus accountMenu = new AccountMenu();
+    // Metodos de gestao de Comunicações
+
+    public static void ManageComsMenu(BufferedReader input, HashMap<Long, Client> c) {
         
-        int choice = ControlInput(2,accountMenu,input);
+        HandleMenus comsmenu = new ComsMenu();
+        
+        int choice = ControlInput(4,comsmenu,input);
         
         switch(choice){
-            
+           
             case 0: break;
-            case 1:
-                    if(c.isEmpty()){
-                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
-                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
-                        holdEnterCont();
-                        break;
-                    }
-                    addAccount(input, c);
+            case 1: createComs(input, c);
                     break;
-            case 2: if(c.isEmpty()){
-                        System.out.println("Lista de clientes vazia. Uma conta tem que ser");
-                        System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
-                        holdEnterCont();
-                        break;
-                    }else{
-                        ListAccByCltid(input, c);
-                        break;
-                    }
+            case 2:
+                    break;
+            case 3:
+                    break;
+            case 4: 
+                    break;
+            default: System.out.println("Erro!");
+                    break;
+            
         }
     }
-    
-    public static void ManageDeviceMenu(BufferedReader input,HashMap<Long,Client> c) {
-     
-            HandleMenus deviceMenu = new DeviceMenu();
-            
-            int choice = ControlInput(4,deviceMenu,input);
-            
-            switch(choice){
-                
-                case 0: break;
-                case 1: if(c.isEmpty()){
-                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
-                            holdEnterCont();
-                            break;
-                        }
-                        addDeviceByNumber(input,c);
-                        break;
-                case 2: if(c.isEmpty()){
-                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
-                            holdEnterCont();
-                            break;
-                        }
-                        listAccDevs(input,c);
-                        break;
-                case 3: if(c.isEmpty()){
-                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
-                            holdEnterCont();
-                            break;
-                        }
-                        listDevNetByType(input,c);
-                        break;
-                case 4: if(c.isEmpty()){
-                            System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
-                            holdEnterCont();
-                            break;
-                        }
-                        addContact2Dev(input,c);
-                        break;
-                        
-            }
-    }
+
+    public static void createComs(BufferedReader input, HashMap<Long, Client> c){
         
-    public static boolean setPriceList(double d,int x){
+        HandleMenus comtype = new TypeOfComs();
         
-        switch(x){
+        int choice = ControlInputNoBackButton(5,comtype,input);
+        switch(choice){
             
-            case 0: PriceList.setC_Acall(d);
-                    return true;
-            case 1: PriceList.setC_Downloads(d);
-                    return true;
-            case 2: PriceList.setC_MMS(d);
-                    return true;
-            case 3: PriceList.setC_SMS(d);
-                    return true;
-            case 4: PriceList.setC_VMMS(d);
-                    return true;
-            case 5: PriceList.setC_Vcall(d);
-                    return false;
-            default: return false;
+            case 1: NewAudioCall(input,c);
+                    break;
+            case 2: NewVideoCall(input,c);
+                    break;
+            case 3: NewTextMessage(input,c);
+                    break;
+            case 4:
+                    break;
+            case 5:
+                    break;
+            default: System.out.println("Erro!");
+                    break;
         }
     }
-    
-    public static boolean callMainMenu(String fx, BufferedReader input, HashMap<Long,Client> c){
+
+    public static void NewAudioCall(BufferedReader input, HashMap<Long, Client> c){
         
-        // Variaveis de Controlo de Menus para Parametros de funcoes
-        
-        HandleMenus mainMenu = new MainMenu();
-        HandleMenus clientMenu = new ClientMenu();
-        
-        
-        int userChoice = ControlInput(5,mainMenu,input);
-        int choice = -1;
+        String option = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0, Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
         
         
-        switch(userChoice){
-            
-            case 0: long cltid = 999, accid = 330000;
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
                     for(Long i : c.keySet()){
-                        Client aux = c.get(i);
-                        if(cltid < i)
-                            cltid = i;
-                        for(Long y : aux.getAccs().keySet()){
-                            Account temp = aux.getAccs().get(y);
-                            if(accid < temp.getID())
-                                accid = temp.getID();
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                }
+                            }
                         }
                     }
-                    try
-                    {
-                        FileOutputStream file = new FileOutputStream(fx);
-                        ObjectOutputStream out = new ObjectOutputStream(file);
-                        out.writeObject(c);
-                        out.writeLong(cltid);
-                        out.writeLong(accid);
-                        out.flush();
-                        out.close();
-                        }catch(FileNotFoundException e){
-                            System.out.println("Nome do fx nao esta correcto!! "); 
-                        }catch(IOException e){
-                            e.printStackTrace();
-                            System.out.println("Problemas de I/O ..."); 
-                        }
-                        System.out.println("A guardar e a sair.");
-                        return false;
-            
-            case 1: choice = ControlInput(2,clientMenu,input);
-                    switch(choice){
-                        
-                        case 1: addClient(c, input);
-                                holdEnterCont();
-                                break;
-                        case 2: listClient(c);
-                                holdEnterCont();
-                                break;
-                        default: break;
-                    }
-                    
-                    break;
-            case 2: ManageAccountMenu(input,c);
-                    break;
-                    
-            case 3: ManageDeviceMenu(input,c);
-                    break;
-            
-            case 4: //choice = ControlInput(,,input);
-                    break;
-            
-            case 5: //choice = ControlInput(,,input);
-                    break;
-            
-            default: callMainMenu(fx, input, c);
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
         }
-        
-        
-        return true;
-    }
-    
-    public static HashMap<Long,Client> readFromFile(String fname){
-        HashMap<Long,Client> temp= null;
-        try
-	{
-            FileInputStream f = new FileInputStream(fname);
-            ObjectInputStream in = new ObjectInputStream(f);
-            temp = (HashMap<Long,Client>)in.readObject();
-            if(temp.isEmpty()){
-                System.out.println("Warning: Ficheiro inexistente ou vazio!");
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
             }
-            long getid = in.readLong();
-            if(getid != 0){
-            Client aux = new Client("setid");
-            aux.setId(getid);
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        if(Oflag && Dflag){
+            for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
+                if(d.getNumber() == Onum){
+                    Comunications temp = new C_Acall(Onum,Dnum,0,Math.random());
+                    d.addLog(temp);
+                }
             }
-            long getid2 = in.readLong();
-            Account aux2 = new Account();
-            aux2.setId(getid2);
-            in.close();
-            f.close();
-	}catch(ClassNotFoundException e)
-	{ System.out.println("Classe do objecto lido nao existe !!"); }
-	catch(FileNotFoundException e)
-	{ System.out.println("Nome do fx nao esta correcto!! "); }
-	catch(IOException e){}
-        
-        return temp;
+            for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
+                if(d.getNumber() == Dnum){
+                    Comunications temp = new C_Acall(Dnum,Onum,1,Math.random());
+                    d.addLog(temp);
+                }
+            }
+            System.out.println("Registo de chamada de voz criado.");
+        }
     }
+
+    public static void NewVideoCall(BufferedReader input, HashMap<Long, Client> c){
+        
+        String option = " ", Ont = "", Dnt = "";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0, Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
+        
+        
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                    Dnt = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        if(Oflag && Dflag){
+            for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
+                if(d.getNumber() == Onum){
+                    Comunications temp = new C_Vcall(Onum,Dnum,0,Math.random(),
+                            CalcRes(Ont,Dnt));
+                    d.addLog(temp);
+                }
+            }
+            for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
+                if(d.getNumber() == Dnum){
+                    Comunications temp = new C_Vcall(Dnum,Onum,1,Math.random(),
+                            CalcRes(Dnt,Ont));
+                    d.addLog(temp);
+                }
+            }
+            System.out.println("Registo de chamada de voz criado.");
+        }
+    }
+   
+    public static String CalcRes(String Ont, String Dnt){
+        
+        String res = " ";
+        
+        if(Ont.equals("4G") && Dnt.equals("4G"))
+            return res = "FHD";
+        if((Ont.equals("4G") && Dnt.equals("3G")) || (Ont.equals("3G") && Dnt.equals("4G")) 
+                || Ont.equals("3G") && Dnt.equals("3G"))
+            return res = "HD";
+        else return res = "SD";
+    }
+  
+    public static void NewTextMessage(BufferedReader input, HashMap<Long, Client> c){
+        
+        String option = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0, Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
+        
+        
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        if(Oflag && Dflag){
+            for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
+                if(d.getNumber() == Onum){
+                    Comunications temp = new C_SMS(Onum,Dnum,0,Math.random(),"****");
+                    d.addLog(temp);
+                }
+            }
+            for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
+                if(d.getNumber() == Dnum){
+                    Comunications temp = new C_SMS(Dnum,Onum,1,Math.random(),"****");
+                    d.addLog(temp);
+                }
+            }
+            System.out.println("Registo de chamada de voz criado.");
+        }
+    }
+    // Main
     
     public static void main(String[] args){
         

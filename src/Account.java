@@ -10,7 +10,8 @@ public class Account implements Serializable{//conta
     
     // Class Getters & Setters
     
-    public static long getACCOUNT_ID(){return ACCOUNT_ID;}
+    public static long getACC_ID(){return ACCOUNT_ID;}
+    public static void setACC_ID(Long id){Account.ACCOUNT_ID = id;}
     
     // Interface variavels
     
