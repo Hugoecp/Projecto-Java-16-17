@@ -171,7 +171,7 @@ public class Vos implements Serializable{
             System.out.println("**  1) Criar comunicações entre     **");
             System.out.println("**     dois dispositivos.           **");
             System.out.println("**  2) Listar comunicações          **");
-            System.out.println("**     recebidas de um dispositivo  **");
+            System.out.println("**     de um dispositivo            **");
             System.out.println("**  3) Cruzar informação de         **");
             System.out.println("**     dois números.                **");
             System.out.println("**  4) Listar as comunicações       **");
@@ -205,6 +205,17 @@ public class Vos implements Serializable{
             System.out.println("1: Mensagem de imagem.");
             System.out.println("2: Mensagem de video.");
             System.out.print(": ");
+            }
+    }
+    
+    public static class InOutCom implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("Tipo de comunicação:");
+            System.out.println("1: Recebida.");
+            System.out.println("2: Efectuada.");
+            System.out.print(":");
             }
     }
     
@@ -442,8 +453,7 @@ public class Vos implements Serializable{
         switch(choice){
             
             case 0: break;
-            case 1:
-                    if(c.isEmpty()){
+            case 1:if(c.isEmpty()){
                         System.out.println("Lista de clientes vazia. Uma conta tem que ser");
                         System.out.println("associada a um cliente existente. Crie primeiro um cliente.");
                         holdEnterCont();
@@ -617,7 +627,7 @@ public class Vos implements Serializable{
                             holdEnterCont();
                             break;
                         }
-                        addDeviceByNumber(input,c);
+                        addDevicetoAcc(input,c);
                         break;
                 case 2: if(c.isEmpty()){
                             System.out.println("Lista de clientes vazia. Crie primeiro um cliente.");
@@ -644,7 +654,7 @@ public class Vos implements Serializable{
             }
     }
  
-    public static void addDeviceByNumber(BufferedReader input, HashMap<Long,Client> c){
+    public static void addDevicetoAcc(BufferedReader input, HashMap<Long,Client> c){
         
         HandleMenus DevMenu = new DeviceTypeMenu();
         
@@ -908,9 +918,15 @@ public class Vos implements Serializable{
         switch(choice){
            
             case 0: break;
-            case 1: createComs(input, c);
+            case 1: if(c.isEmpty()){
+                        System.out.println("Lista de clientes vazia. ");
+                        System.out.println("Crie primeiro um cliente.");
+                        holdEnterCont();
+                        break;
+                    }
+                    createComs(input, c);
                     break;
-            case 2:
+            case 2: listDevComs(input, c);
                     break;
             case 3:
                     break;
@@ -926,6 +942,42 @@ public class Vos implements Serializable{
         
         HandleMenus comtype = new TypeOfComs();
         HandleMenus mmstype = new MmsType();
+        
+        {
+        
+        
+            int choice = ControlInputNoBackButton(5,comtype,input);
+            switch(choice){
+
+                case 1: NewAudioCall(input,c);
+                        break;
+                case 2: NewVideoCall(input,c);
+                        break;
+                case 3: NewTextMessage(input,c);
+                        break;
+                case 4: int type = ControlInputNoBackButton(2,mmstype,input);
+                            switch(type){
+                                
+                                case 1: NewImageMMS(input,c);
+                                        break;
+                                    
+                                case 2: NewVideoMMS(input,c);
+                                        break;
+                                    
+                                default:System.out.println("Erro!!"); 
+                                        break;
+                            }
+
+                        break;
+                case 5: NewDownload(input,c);
+                        break;
+                default: System.out.println("Erro!");
+                        break;
+            }
+        }
+    }
+
+    public static void NewAudioCall(BufferedReader input, HashMap<Long, Client> c){
         
         String option = " ", Dnt = " ", Ont = " ";
         long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0,
@@ -966,6 +1018,8 @@ public class Vos implements Serializable{
                 }
             }catch(IOException ex){
                 ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
             }
         }
         if(!Oflag){
@@ -1006,47 +1060,6 @@ public class Vos implements Serializable{
             holdEnterCont();
             return;
         }else{
-        
-        
-            int choice = ControlInputNoBackButton(5,comtype,input);
-            switch(choice){
-
-                case 1: NewAudioCall(c,Ocltid,Oaccid, Onum, Dcltid, 
-                        Daccid, Dnum);
-                        break;
-                case 2: NewVideoCall(c,Ocltid,Oaccid, Onum, Dcltid, 
-                        Daccid, Dnum, Ont, Dnt);
-                        break;
-                case 3: NewTextMessage(c,Ocltid,Oaccid, Onum, Dcltid, 
-                        Daccid, Dnum);
-                        break;
-                case 4: int type = ControlInputNoBackButton(2,mmstype,input);
-                            switch(type){
-                                
-                                case 1: NewImageMMS(c,Ocltid,Oaccid, Onum, 
-                                        Dcltid, Daccid, Dnum, Ont, Dnt);
-                                        break;
-                                    
-                                case 2: NewVideoMMS(c,Ocltid,Oaccid, Onum, 
-                                        Dcltid, Daccid, Dnum, Ont, Dnt);
-                                        break;
-                                    
-                                default:System.out.println("Erro!!"); 
-                                        break;
-                            }
-
-                        break;
-                case 5: NewDownload(c,Ocltid,Oaccid,Onum);
-                        break;
-                default: System.out.println("Erro!");
-                        break;
-            }
-        }
-    }
-
-    public static void NewAudioCall(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum, long Dcltid,long Daccid, long Dnum){
-        
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_Acall(Onum,Dnum,0,Math.random());
@@ -1060,13 +1073,92 @@ public class Vos implements Serializable{
                 }
             }
             System.out.println("Registo de chamada de voz criado.");
-       
+        }
     }
 
-    public static void NewVideoCall(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum, long Dcltid,long Daccid, 
-            long Dnum,String Ont, String Dnt){
+    public static void NewVideoCall(BufferedReader input, HashMap<Long, Client> c){
+            
+        String option = " ", Dnt = " ", Ont = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0,
+                Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
         
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(num == 0){
+                        return;
+                    }else{
+                    System.out.println("Erro. Esse número não existe!");
+                    holdEnterCont();
+                    } 
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                    Dnt = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_Vcall(Onum,Dnum,0,Math.random(),
@@ -1082,7 +1174,7 @@ public class Vos implements Serializable{
                 }
             }
             System.out.println("Registo de chamada de video criado.");
-        
+        }
     }
    
     public static String CalcRes(String Ont, String Dnt){
@@ -1097,10 +1189,89 @@ public class Vos implements Serializable{
         else return res = "SD";
     }
   
-    public static void NewTextMessage(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum, long Dcltid,long Daccid, 
-            long Dnum){
+    public static void NewTextMessage(BufferedReader input, HashMap<Long, Client> c){
         
+        String option = " ", Dnt = " ", Ont = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0,
+                Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
+        
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(num == 0){
+                        return;
+                    }else{
+                    System.out.println("Erro. Esse número não existe!");
+                    holdEnterCont();
+                    } 
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                    Dnt = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_SMS(Onum,Dnum,0,Math.random(),"****");
@@ -1114,12 +1285,92 @@ public class Vos implements Serializable{
                 }
             }
             System.out.println("Registo de mensagem de texto criado.");
+        }
     }
     
-    public static void NewVideoMMS(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum, long Dcltid,long Daccid, 
-            long Dnum, String Ont, String Dnt){
+    public static void NewVideoMMS(BufferedReader input, HashMap<Long, Client> c){
         
+        String option = " ", Dnt = " ", Ont = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0,
+                Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
+        
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(num == 0){
+                        return;
+                    }else{
+                    System.out.println("Erro. Esse número não existe!");
+                    holdEnterCont();
+                    } 
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                    Dnt = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_VMMS(Onum,Dnum,0,CalcRes(Ont, Dnt)
@@ -1135,12 +1386,92 @@ public class Vos implements Serializable{
                 }
             }
             System.out.println("Registo de mensagem de Video criado.");
+        }
     }
     
-    public static void NewImageMMS(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum, long Dcltid,long Daccid, 
-            long Dnum, String Ont, String Dnt){
+    public static void NewImageMMS(BufferedReader input, HashMap<Long, Client> c){
+            
+        String option = " ", Dnt = " ", Ont = " ";
+        long num = 0, Dnum = 0, Onum = 0, Dcltid = 0, Ocltid = 0,
+                Daccid = 0, Oaccid = 0;
+        boolean Drerun = true, Dflag = false, Orerun = true, Oflag = false;
         
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(num == 0){
+                        return;
+                    }else{
+                    System.out.println("Erro. Esse número não existe!");
+                    holdEnterCont();
+                    } 
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }
+        while(Drerun){
+            try{
+                System.out.println("Numero destino: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Dcltid = i;
+                                    Daccid = j;
+                                    Dnum = num;
+                                    Drerun = false;
+                                    Dflag = true;
+                                    Dnt = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        if(!Dflag){
+            System.out.println("O numero " + Dnum + " não existe!");
+            holdEnterCont();
+            return;
+        }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_MMS(Onum,Dnum,0,Math.random(),
@@ -1156,19 +1487,66 @@ public class Vos implements Serializable{
                 }
             }
             System.out.println("Registo de mensagem de imagem criado.");
+        }
     }
     
-    public static void NewDownload(HashMap<Long, Client> c, long Ocltid, 
-            long Oaccid, long Onum){
+    public static void NewDownload(BufferedReader input, HashMap<Long, Client> c){
         
+        String option = " ", Dnt = " ", Ont = " ";
+        long num = 0, Dnum = 0, Onum = 0, Ocltid = 0, Oaccid = 0;
+        boolean Oflag = false, Orerun = true;
+        
+        while(Orerun){
+            try{
+                System.out.println("Numero origem: ");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client temp = c.get(i);
+                        for(Long j : temp.getAccs().keySet()){
+                            Account temp2 = temp.getAccs().get(j);
+                            for(Device d : temp2.getDevList()){
+                                if(d.getNumber() == num){
+                                    Ocltid = i;
+                                    Oaccid = j;
+                                    Onum = num;
+                                    Orerun = false;
+                                    Oflag = true;
+                                    Ont = d.getNetworkType();
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(num == 0){
+                        return;
+                    }else{
+                    System.out.println("Erro. Esse número não existe!");
+                    holdEnterCont();
+                    } 
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. Só numeros 0-9.");
+            }
+        }
+        if(!Oflag){
+            System.out.println("O numero " + Onum + " não existe!");
+            holdEnterCont();
+            return;
+        }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
                     Comunications temp = new C_Downloads(Onum,0,Math.random(),Math.random());
                     d.addLog(temp);
                 }
             }
-            
             System.out.println("Registo de descarga de software criado.");
+        }
     }
     
     public static String CalcVideoFormat(String Ont, String Dnt){
@@ -1194,6 +1572,64 @@ public class Vos implements Serializable{
             return res = "jpeg";
         else return res = "bmp";
     }
+    
+    public static void listDevComs(BufferedReader input, HashMap<Long, Client> c){
+        
+        HandleMenus inoutcom = new InOutCom();
+        int choice = 0;
+        long num = 0, cltid = 0, accid = 0;
+        String option = " ";
+        boolean rerun = true, flag = false;
+       
+        while(rerun){
+            try{
+                choice = ControlInputNoBackButton(2,inoutcom,input);
+                
+                System.out.println("Introduza o numero do dispositivo que "
+                        + "quer ver as comunicações:");
+                System.out.print(": ");
+                option = input.readLine();
+                if(!option.isEmpty() && option.length() == 9){
+                    num = Long.parseLong(option);
+                    for(Long i : c.keySet()){
+                        Client aux = c.get(i);
+                        for(Long j : aux.getAccs().keySet()){
+                            Account aux2 = aux.getAccs().get(j);
+                            for(Device d : aux2.getDevList()){
+                                if(d.getNumber() == num){
+                                    cltid = i;
+                                    accid = j;
+                                    rerun = false;
+                                    flag = true;
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    System.out.println("Erro! Esse número nao existe!");
+                    return;
+            }
+            }catch(IOException ex){
+            ex.printStackTrace();
+            }
+        }
+        if(choice == 1)
+            for(Device d : c.get(cltid).getAccs().get(accid).getDevList())
+                if(d.getNumber() == num){
+                    d.printRlogs();
+                    holdEnterCont();
+                    return;
+                }
+        if(choice == 0)
+            for(Device d : c.get(cltid).getAccs().get(accid).getDevList())
+                if(d.getNumber() == num){
+                    d.printSlogs();
+                    holdEnterCont();
+                    return;
+                }
+        System.out.println("Não existe nenhuma comunicação desse tipo no número "
+                + num);
+    }   
     
     // Main
     
