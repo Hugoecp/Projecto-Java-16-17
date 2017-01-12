@@ -370,7 +370,7 @@ public class Vos implements Serializable{
  }
     
     // Metodos de leitura externa
-    
+    @SuppressWarnings("unchecked")
     public static HashMap<Long,Client> readFromFile(String fname){
         HashMap<Long,Client> temp= null;
         try
@@ -2004,6 +2004,15 @@ public class Vos implements Serializable{
             System.out.println("Lista de clientes vazia. A criar uma nova!!");
             ClientList = new HashMap<Long, Client>();
         }
+        System.out.println("#########################");
+        System.out.println("####                 ####");
+        System.out.println("#### Feito por:      ####");
+        System.out.println("#### Hugo Pereira    ####");
+        System.out.println("#### nº48319         ####");
+        System.out.println("#### Curso : MIETI   ####");
+        System.out.println("#### PP1 - 2016/2017 ####");
+        System.out.println("####                 ####");
+        System.out.println("#########################00");
         boolean rerun = true;
         while(rerun){
             rerun = callMainMenu(fname, input, ClientList);
