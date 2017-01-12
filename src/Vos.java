@@ -1076,7 +1076,7 @@ public class Vos implements Serializable{
         }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
-                    C_Acall temp = new C_Acall(Onum,Dnum,0,Math.random());
+                    Comunications temp = new C_Acall(Onum,Dnum,0,Math.random());
                     d.addLog(temp);
                     System.out.println("Registo de chamada de voz criado.");
                     return;
@@ -1084,7 +1084,7 @@ public class Vos implements Serializable{
             }
             for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
                 if(d.getNumber() == Dnum){
-                    C_Acall temp2 = new C_Acall(Dnum,Onum,1,Math.random());
+                    Comunications temp2 = new C_Acall(Dnum,Onum,1,Math.random());
                     d.addLog(temp2);
                     System.out.println("Registo de chamada de voz criado.");
                     return;
@@ -1832,7 +1832,8 @@ public class Vos implements Serializable{
         String option = " ";
         long num = 0, cltid = 0, accid = 0;
         boolean rerun = true, flag = false;
-        double cost = 0.0;
+        double cost1 = 0.0, cost2 = 0.0, cost3 = 0.0, cost4 = 0.0, cost5 = 0.0, 
+                cost6 = 0.0;
         
         while(rerun){
             try{
@@ -1895,72 +1896,60 @@ public class Vos implements Serializable{
                     }
                 }
                     for(Comunications coms : SMS){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas SMS:");
-                        System.out.println("Destino: " + coms.getDestinyNumber());
-                        cost += (((C_SMS)coms).getSmsSize()/160)*PriceList.getC_SMS();
+                        System.out.println("SMS com destino: " + coms.getDestinyNumber());
+                        cost1 += (((C_SMS)coms).getSmsSize()/160)*PriceList.getC_SMS();
                     }
                     if(!SMS.isEmpty()){
-                        System.out.println("Custo de todas as SMS: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as SMS: " + cost1);
+                        
                     }
                         
                     for(Comunications coms : Acall){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas chamadas de voz:");
-                        System.out.println("Destino: " + coms.getDestinyNumber());
-                        cost += (((C_Acall)coms).getDuration()*PriceList.getC_Acall());
+                        System.out.println("Chamada de voz com destino: " + coms.getDestinyNumber());
+                        cost2 += (((C_Acall)coms).getDuration()*PriceList.getC_Acall());
                     }
                     if(!Acall.isEmpty()){
-                        System.out.println("Custo de todas as chamadas de voz: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as chamadas de voz: " + cost2);
                     }
                 
                     for(Comunications coms : Vcall){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas chamadas de video:");
-                        System.out.println("Destino " + coms.getDestinyNumber());
-                        cost += (((C_Vcall)coms).getDuration()*PriceList.getC_Vcall());
+                        System.out.println("Chamada de video com destino " + coms.getDestinyNumber());
+                        cost3 += (((C_Vcall)coms).getDuration()*PriceList.getC_Vcall());
                     }
                     if(!Vcall.isEmpty()){
-                        System.out.println("Custo de todas as chamadas de video: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as chamadas de video: " + cost3);
                     }
                     
                     for(Comunications coms : MMS){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas mensagens de imagem:");
-                        System.out.println("Destino " + coms.getDestinyNumber());
-                        cost += MMS.size()*PriceList.getC_MMS();
+                        System.out.println("Imagem de imagem com destino " + coms.getDestinyNumber());
+                        cost4 += MMS.size()*PriceList.getC_MMS();
                     }
                     if(!MMS.isEmpty()){
-                        System.out.println("Custo de todas as mensagens de imagem: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as mensagens de imagem: " + cost4);
                     }
                     
                     for(Comunications coms : VMMS){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas mensagens de video:");
-                        System.out.println("Destino " + coms.getDestinyNumber());
-                        cost += VMMS.size()*PriceList.getC_VMMS();
+                        System.out.println("Imagem de video com destino " + coms.getDestinyNumber());
+                        cost5 += VMMS.size()*PriceList.getC_VMMS();
                     }
                     if(!VMMS.isEmpty()){
-                        System.out.println("Custo de todas as mensagens de video: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as mensagens de video: " + cost5);
                     }
                     
                     for(Comunications coms : Download){
-                        System.out.println("O dispositivo do tipo " + d.getType() 
-                                + " tem estas descargas:");
                         System.out.println("Descarga com o tamanho: " + ((C_Downloads)coms).getSize());
-                        cost += ((C_Downloads)coms).DownloadSize()*PriceList.getC_Downloads();
+                        cost6 += ((C_Downloads)coms).DownloadSize()*PriceList.getC_Downloads();
                     }
                     if(!Download.isEmpty()){
-                        System.out.println("Custo de todas as mensagens de video: " + Math.round(cost));
-                        cost = 0.0;
+                        System.out.println("Custo de todas as descargas: " +  cost6);
                     }
                     holdEnterCont();
             }
+        }else{
+            System.out.println("Os dispositivos desta conta ainda não "
+                    + "efectuaram nenhuma comunicação.");
+            holdEnterCont();
+            return;
         }    
         
         
