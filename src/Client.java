@@ -42,13 +42,7 @@ public class Client implements Serializable {
     public void setId(long i){this.id = i;}
     public String getName(){return name;}
     public void setName(String n){this.name = n;}
-    public HashMap<Long,Account> getAccs(){//get do mapa
-        
-        HashMap<Long,Account> temp = new HashMap<Long,Account>();
-        temp.putAll(this.accs);
-        
-        return temp;
-    }
+    public HashMap<Long,Account> getAccs(){return this.accs;}
     
     // Methods
     

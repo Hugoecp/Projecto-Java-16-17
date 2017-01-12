@@ -39,14 +39,7 @@ public class Account implements Serializable{//conta
     public long getID(){return this.id;}
     public void setId(Long id){Account.ACCOUNT_ID = id;}
     
-    public ArrayList<Device> getDevList(){
-        
-        ArrayList<Device> temp = new ArrayList<Device>();
-        for(Device d : this.DeviceList){
-            temp.add(d.clone());
-        }
-        return temp;
-    }
+    public ArrayList<Device> getDevList(){return this.DeviceList;}
     
     // Methods
     public boolean addDevice(Device d){

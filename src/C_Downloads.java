@@ -23,7 +23,10 @@ public class C_Downloads extends Comunications implements Byteable{
     public void setDuration(double duration){this.duration = duration;}
     public String getComType(){return "Descarga";}
     
-    public double transmitRate(){return this.size/(this.duration/60);}
+    public double transmitRate(){
+        return this.size/(this.duration/60);}
+    public double DownloadSize(){return this.size;}
+        
     
     public double comCost()
         {return ((this.size/209715200)*PriceList.getC_Downloads());} //custo por cada 200MB

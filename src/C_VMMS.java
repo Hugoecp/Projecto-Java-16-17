@@ -4,6 +4,7 @@ public class C_VMMS extends Comunications implements Byteable{
     private String res;
     private String format;
     private double duration;
+    private double size = Math.random();
     
     public C_VMMS(long on, long ds, int c, String r, String f, double d){
         
@@ -30,11 +31,8 @@ public class C_VMMS extends Comunications implements Byteable{
     public String getComType(){return "Mensagem de video";}
     
     public double transmitRate(){
-        
-        //TODO criar o metodo
-        
-        return 0.0;
-    }
+        return this.size/(this.duration/60);}
+    public double DownloadSize(){return this.size;}
         
     public double comCost(){return PriceList.getC_VMMS();}
     public C_VMMS clone(){return new C_VMMS(this);}

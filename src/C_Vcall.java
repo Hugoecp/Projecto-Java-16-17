@@ -3,6 +3,7 @@ public class C_Vcall extends Comunications implements Byteable{
     
     private double duration;
     private String res;
+    private double size = Math.random();
     
     public C_Vcall(long on, long dn, int c, double d, String r){
         
@@ -25,11 +26,8 @@ public class C_Vcall extends Comunications implements Byteable{
     public String getComType(){return "Chamada de video";}
     
     public double transmitRate(){
-        
-        //TODO criar o metodo
-        
-        return 0.0;
-    }
+        return this.size/(this.duration/60);}
+    public double DownloadSize(){return this.size;}
     public double comCost(){return this.duration*PriceList.getC_Vcall();}
     public C_Vcall clone(){return new C_Vcall(this);}
     public boolean equals(Comunications c){

@@ -1,5 +1,6 @@
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class D_Phone extends Device implements Serializable{
  
@@ -14,23 +15,27 @@ public class D_Phone extends Device implements Serializable{
         super(p.getNumber(), p.getNetworkType());
     }
     
-    public void printRlogs(){
+    public ArrayList<Comunications> printRlogs(){
         
+        ArrayList<Comunications> temp = new ArrayList<Comunications>();
         for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 0)
-                System.out.println("Numero: " + aux.getOriginNumber() + 
-                        " - " + aux.getClass().getName());
+                temp.add(aux);
         }
+        return temp;
     }
     
-    public void printSlogs(){
+    public ArrayList<Comunications> printSlogs(){
         
+        ArrayList<Comunications> temp = new ArrayList<Comunications>();
         for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 1)
-                System.out.println("Numero: " + aux.getDestinyNumber() + 
-                        " - " + aux.getClass().getName());
+                temp.add(aux);
         }
+        return temp;
     }
+    
+    public String getType(){return "telemovel";}
     
     public D_Phone clone(){
         return new D_Phone(this);

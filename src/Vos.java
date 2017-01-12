@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -219,6 +218,16 @@ public class Vos implements Serializable{
             }
     }
     
+    public static class Printlist implements HandleMenus{
+        
+        public void printMenu(){
+            
+            System.out.println("Deseja imprimir a lista?!");
+            System.out.println("1: Sim");
+            System.out.println("2: Não");
+            }
+    }
+    
     // Metodos de controlo
     
     public static int ControlInput(int max, HandleMenus menu, BufferedReader input){
@@ -344,7 +353,7 @@ public class Vos implements Serializable{
             case 4: ManageComsMenu(input,c);
                     break;
             
-            case 5: //choice = ControlInput(,,input);
+            case 5: Invoice(input,c);
                     break;
             
             default: callMainMenu(fx, input, c);
@@ -936,7 +945,7 @@ public class Vos implements Serializable{
                     break;
             case 3: CrossReferenceDevs(input,c);
                     break;
-            case 4: 
+            case 4: ByteComs(input,c);
                     break;
             default: System.out.println("Erro!");
                     break;
@@ -1067,17 +1076,21 @@ public class Vos implements Serializable{
         }else{
             for(Device d: c.get(Ocltid).getAccs().get(Oaccid).getDevList()){
                 if(d.getNumber() == Onum){
-                    Comunications temp = new C_Acall(Onum,Dnum,0,Math.random());
+                    C_Acall temp = new C_Acall(Onum,Dnum,0,Math.random());
                     d.addLog(temp);
+                    System.out.println("Registo de chamada de voz criado.");
+                    return;
                 }
             }
             for(Device d: c.get(Dcltid).getAccs().get(Daccid).getDevList()){
                 if(d.getNumber() == Dnum){
-                    Comunications temp2 = new C_Acall(Dnum,Onum,1,Math.random());
+                    C_Acall temp2 = new C_Acall(Dnum,Onum,1,Math.random());
                     d.addLog(temp2);
+                    System.out.println("Registo de chamada de voz criado.");
+                    return;
                 }
             }
-            System.out.println("Registo de chamada de voz criado.");
+            
         }
     }
 
@@ -1100,7 +1113,8 @@ public class Vos implements Serializable{
                         for(Long j : temp.getAccs().keySet()){
                             Account temp2 = temp.getAccs().get(j);
                             for(Device d : temp2.getDevList()){
-                                if(d.getNumber() == num){
+                                if(d.getNumber() == num && 
+                                        !d.getNetworkType().equals("2G")){
                                     Ocltid = i;
                                     Oaccid = j;
                                     Onum = num;
@@ -1499,7 +1513,7 @@ public class Vos implements Serializable{
         
         String option = " ", Dnt = " ", Ont = " ";
         long num = 0, Dnum = 0, Onum = 0, Ocltid = 0, Oaccid = 0;
-        boolean Oflag = false, Orerun = true;
+        boolean Oflag = false, Orerun = true, ErrorTest = false;
         
         while(Orerun){
             try{
@@ -1513,13 +1527,19 @@ public class Vos implements Serializable{
                         for(Long j : temp.getAccs().keySet()){
                             Account temp2 = temp.getAccs().get(j);
                             for(Device d : temp2.getDevList()){
-                                if(d.getNumber() == num){
+                                if(d.getNumber() == num && 
+                                    d.getType().equals("tablet") &&
+                                    !d.getNetworkType().equals("2G")){
                                     Ocltid = i;
                                     Oaccid = j;
                                     Onum = num;
                                     Orerun = false;
                                     Oflag = true;
                                     Ont = d.getNetworkType();
+                                }
+                                else{
+                                    if(d.getType().equals("tablet"))
+                                        ErrorTest = true;
                                 }
                             }
                         }
@@ -1529,8 +1549,15 @@ public class Vos implements Serializable{
                     if(num == 0){
                         return;
                     }else{
+                        if(ErrorTest){
+                            System.out.println("Erro! Apenas os dispositivos "
+                                    + "do tipo tablet podem efecutar este tipo"
+                                    + " de comunicação.");
+                            holdEnterCont();
+                        }else{
                     System.out.println("Erro. Esse número não existe!");
                     holdEnterCont();
+                        }
                     } 
                 }
             }catch(IOException ex){
@@ -1616,24 +1643,45 @@ public class Vos implements Serializable{
             }
             }catch(IOException ex){
             ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro. So números!");
             }
         }
-        if(choice == 1)
+        if(choice == 1){
             for(Device d : c.get(cltid).getAccs().get(accid).getDevList())
                 if(d.getNumber() == num){
-                    d.printRlogs();
+                    int k = 0;
+                    ArrayList<Comunications> temp = d.printRlogs();
+                    for(Comunications aux : temp){
+                        System.out.println(++k + ": O número " + num + " tem uma "
+                                + "comunicação do tipo " + aux.getComType() + 
+                                " do número " + aux.getDestinyNumber());
+                    }
                     holdEnterCont();
                     return;
+                }else{
+                    System.out.println("Não existe nenhuma comunicação desse"
+                            + " tipo no número " + num);
                 }
-        if(choice == 0)
+        }
+        if(choice == 0){
             for(Device d : c.get(cltid).getAccs().get(accid).getDevList())
                 if(d.getNumber() == num){
-                    d.printSlogs();
+                    int k = 0;
+                    ArrayList<Comunications> temp = d.printSlogs();
+                    for(Comunications aux : temp){
+                        System.out.println(++k + ": O número " + num + " tem a "
+                                + "comunicação do tipo " + aux.getComType() + 
+                                " para o número " + aux.getDestinyNumber());
+                    }
                     holdEnterCont();
                     return;
+                }else{
+                    System.out.println("Não existe nenhuma comunicação desse"
+                            + " tipo no número " + num);
                 }
-        System.out.println("Não existe nenhuma comunicação desse tipo no número "
-                + num);
+        }
+        
     }  
     
     public static void CrossReferenceDevs(BufferedReader input, HashMap<Long, Client> c){
@@ -1742,6 +1790,182 @@ public class Vos implements Serializable{
         
     }
     
+    public static void ByteComs(BufferedReader input, HashMap<Long, Client> c){
+        
+        HandleMenus printquestion = new Printlist();
+        
+        ArrayList<Comunications> list = new ArrayList<Comunications>();
+        double totalDataUsed = 0.0;
+        boolean rerun = true;
+        for(Client temp : c.values())
+            for(Account aux : temp.getAccs().values())
+                for(Device d : aux.getDevList())
+                    for(Comunications coms : d.getLogs()){
+                        if(coms instanceof Byteable){
+                            totalDataUsed += ((Byteable) coms).DownloadSize();
+                            list.add(coms);
+                        }
+                    }
+        System.out.println("Lista criada.");
+        holdEnterCont();
+        int choice = ControlInputNoBackButton(2,printquestion,input), k=0;
+        switch(choice){
+            case 1: for(Comunications p : list){
+                        System.out.println(++k + " " + p.getComType() + " do "
+                                + "número " + p.getOriginNumber() + " para o "
+                                + "número " + p.getDestinyNumber());
+                    }
+                    System.out.println("");
+                    System.out.println("O total de dados usados "
+                            + "foi de: " + totalDataUsed);
+                    holdEnterCont();
+                    return;
+                
+            case 2: System.out.println("Lista descartada.");
+                    holdEnterCont();
+        }
+
+    }
+    
+    public static void Invoice(BufferedReader input, HashMap<Long, Client> c){
+        
+        String option = " ";
+        long num = 0, cltid = 0, accid = 0;
+        boolean rerun = true, flag = false;
+        double cost = 0.0;
+        
+        while(rerun){
+            try{
+                System.out.println("Insira o numero da conta:");
+                System.out.print(": ");
+                option = input.readLine();
+                if(option.startsWith("33") && !option.isEmpty() 
+                        && option.length() >= 6 ){
+                    num = Long.parseLong(option);
+                        for(Long i : c.keySet()){
+                            Client aux = c.get(i);
+                            for(Long j : aux.getAccs().keySet()){
+                                if(num == j){
+                                    cltid = i;
+                                    accid = j;    
+                                    rerun = false;
+                                    flag = true;
+                                }
+                            }
+                        }
+                    }else{
+                    System.out.println("Essa conta não existe!");
+                    holdEnterCont();
+                    return;
+                }
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }catch(NumberFormatException ex){
+                System.out.println("Erro! Só números de 0-9!");
+            }
+        }
+        if(flag){
+            for(Device d : c.get(cltid).getAccs().get(accid).getDevList()){
+                
+                ArrayList<Comunications> SMS = new ArrayList<Comunications>();
+                ArrayList<Comunications> Acall = new ArrayList<Comunications>();
+                ArrayList<Comunications> Vcall = new ArrayList<Comunications>();
+                ArrayList<Comunications> MMS = new ArrayList<Comunications>();
+                ArrayList<Comunications> VMMS = new ArrayList<Comunications>();
+                ArrayList<Comunications> Download = new ArrayList<Comunications>();
+                
+                for(Comunications coms : d.getLogs()){
+                    if(coms instanceof C_SMS){
+                        SMS.add(coms);
+                    }
+                    if(coms instanceof C_Acall){
+                        Acall.add(coms);
+                    }
+                    if(coms instanceof C_Vcall){
+                        Vcall.add(coms);
+                    }
+                    if(coms instanceof C_MMS){
+                        MMS.add(coms);
+                    }
+                    if(coms instanceof C_VMMS){
+                        VMMS.add(coms);
+                    }
+                    if(coms instanceof C_Downloads){
+                        Download.add(coms);
+                    }
+                }
+                    for(Comunications coms : SMS){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas SMS:");
+                        System.out.println("Destino: " + coms.getDestinyNumber());
+                        cost += (((C_SMS)coms).getSmsSize()/160)*PriceList.getC_SMS();
+                    }
+                    if(!SMS.isEmpty()){
+                        System.out.println("Custo de todas as SMS: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                        
+                    for(Comunications coms : Acall){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas chamadas de voz:");
+                        System.out.println("Destino: " + coms.getDestinyNumber());
+                        cost += (((C_Acall)coms).getDuration()*PriceList.getC_Acall());
+                    }
+                    if(!Acall.isEmpty()){
+                        System.out.println("Custo de todas as chamadas de voz: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                
+                    for(Comunications coms : Vcall){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas chamadas de video:");
+                        System.out.println("Destino " + coms.getDestinyNumber());
+                        cost += (((C_Vcall)coms).getDuration()*PriceList.getC_Vcall());
+                    }
+                    if(!Vcall.isEmpty()){
+                        System.out.println("Custo de todas as chamadas de video: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                    
+                    for(Comunications coms : MMS){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas mensagens de imagem:");
+                        System.out.println("Destino " + coms.getDestinyNumber());
+                        cost += MMS.size()*PriceList.getC_MMS();
+                    }
+                    if(!MMS.isEmpty()){
+                        System.out.println("Custo de todas as mensagens de imagem: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                    
+                    for(Comunications coms : VMMS){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas mensagens de video:");
+                        System.out.println("Destino " + coms.getDestinyNumber());
+                        cost += VMMS.size()*PriceList.getC_VMMS();
+                    }
+                    if(!VMMS.isEmpty()){
+                        System.out.println("Custo de todas as mensagens de video: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                    
+                    for(Comunications coms : Download){
+                        System.out.println("O dispositivo do tipo " + d.getType() 
+                                + " tem estas descargas:");
+                        System.out.println("Descarga com o tamanho: " + ((C_Downloads)coms).getSize());
+                        cost += ((C_Downloads)coms).DownloadSize()*PriceList.getC_Downloads();
+                    }
+                    if(!Download.isEmpty()){
+                        System.out.println("Custo de todas as mensagens de video: " + Math.round(cost));
+                        cost = 0.0;
+                    }
+                    holdEnterCont();
+            }
+        }    
+        
+        
+    }
+    
     // Main
     
     public static void main(String[] args){
@@ -1790,5 +2014,4 @@ public class Vos implements Serializable{
             ex.printStackTrace();
         }
     }
-    
 }

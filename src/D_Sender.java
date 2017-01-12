@@ -1,5 +1,6 @@
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class D_Sender extends Device implements Serializable{
@@ -14,21 +15,24 @@ public class D_Sender extends Device implements Serializable{
         super(ds.getNumber(), ds.getNetworkType());
     }
     
-    public void printRlogs(){
-
-         for(Comunications aux : super.getLogs()){
-             if(aux.getControl() == 0)
-                 System.out.println("Numero: " + aux.getOriginNumber() + 
-                         " - " + aux.getClass().getName());
-         }
-     }
-    public void printSlogs(){
+    public ArrayList<Comunications> printRlogs(){
         
+        ArrayList<Comunications> temp = new ArrayList<Comunications>();
+        for(Comunications aux : super.getLogs()){
+            if(aux.getControl() == 0)
+                temp.add(aux);
+        }
+        return temp;
+    }
+    
+    public ArrayList<Comunications> printSlogs(){
+        
+        ArrayList<Comunications> temp = new ArrayList<Comunications>();
         for(Comunications aux : super.getLogs()){
             if(aux.getControl() == 1)
-                System.out.println("Numero: " + aux.getDestinyNumber() + 
-                        " - " + aux.getClass().getName());
+                temp.add(aux);
         }
+        return temp;
     }
     public D_Sender clone(){
         return new D_Sender(super.getNumber(), super.getNetworkType());
@@ -42,6 +46,7 @@ public class D_Sender extends Device implements Serializable{
         }
         return false;
     }
+    public String getType(){return "sender";}
     
     public boolean AcceptComs(Comunications c){
         

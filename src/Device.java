@@ -71,9 +71,10 @@ public abstract class Device implements Serializable, Comparator<Contact>{
         }
         return false;
     }
-    public void addLog(Comunications c){this.Logs.add(c);}
-    public abstract void printRlogs();
-    public abstract void printSlogs();
+    public void addLog(Comunications c){this.Logs.add(c.clone());}
+    public abstract String getType();
+    public abstract ArrayList<Comunications> printRlogs();
+    public abstract ArrayList<Comunications> printSlogs();
     public abstract Device clone();
     public abstract boolean equals(Device d);
 }
