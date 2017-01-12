@@ -701,14 +701,13 @@ public class Vos implements Serializable{
             if(option.startsWith("33") && !option.isEmpty() 
                     && option.length() >= 6 ){
                 num = Long.parseLong(option);
-                    for(Long i : c.keySet()){
-                        Client aux = c.get(i);
+                    Client aux = c.get(cltid);
                         for(Long j : aux.getAccs().keySet()){
                             if(num == j){
                                 accid = num;    
                             }
                         }
-                    }
+                    
                 }else{
                 System.out.println("Essa conta não existe!");
                 holdEnterCont();
@@ -794,12 +793,12 @@ public class Vos implements Serializable{
         
         HandleMenus netMenu = new NetworkTypeMenu();
         
-        int choice = ControlInput(3, netMenu,input);
+        int choice = ControlInputNoBackButton(3, netMenu,input);
         switch(choice){
-            case 0: return "2G";
-            case 1: return "3G";
-            case 2: return "4G";
-            default: return "Erro!";
+            case 1: return "2G";
+            case 2: return "3G";
+            case 3: return "4G";
+            default: return "Erro";
         }
         
     }
@@ -809,7 +808,7 @@ public class Vos implements Serializable{
      
         HandleMenus netType = new NetworkTypeMenu();
         String network = "";
-        int cont = 0, emptylist = 0;
+        int cont = 0, emptylist = -1;
         int choice = ControlInputNoBackButton(3,netType,input);
         switch(choice){
             case 1: network = "2G";
@@ -826,14 +825,14 @@ public class Vos implements Serializable{
                 for(Device d : aux.getDevList()){
                     if(d.getNetworkType().equals(network)){
                         System.out.println(++cont + ": Dispositivo com o numero "
-                        + d.getNumber() + " do tipo " + d.getClass().getSimpleName());
+                        + d.getNumber() + " do tipo " + d.getType());
                         ++emptylist;
                     }
                 }
             }
         }
         holdEnterCont();
-        if(emptylist == 0)
+        if(emptylist < 0)
             System.out.println("Não existem dispositivos com esse tipo de rede.");
     }
  
@@ -2001,7 +2000,7 @@ public class Vos implements Serializable{
         System.out.println("#### Curso : MIETI   ####");
         System.out.println("#### PP1 - 2016/2017 ####");
         System.out.println("####                 ####");
-        System.out.println("#########################00");
+        System.out.println("#########################");
         boolean rerun = true;
         while(rerun){
             rerun = callMainMenu(fname, input, ClientList);
